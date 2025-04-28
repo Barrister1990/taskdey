@@ -1,13 +1,24 @@
 // pages/index.js
 import { AnimatePresence, motion } from 'framer-motion';
-import { BriefcaseBusiness, Clock, Map, Menu, MessageSquare, Shield, Star, Users, X } from 'lucide-react';
+import {
+  AlertCircle,
+  BriefcaseBusiness,
+  ChevronRight,
+  Clock,
+  Download,
+  Map,
+  MessageSquare,
+  Shield,
+  Smartphone,
+  Star,
+  Users
+} from 'lucide-react';
 import { NextSeo } from 'next-seo';
 import Head from 'next/head';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-
-
+import { useEffect, useRef, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
+// SEO Components remain unchanged
 const SEOContent = () => (
   <NextSeo
     title="Taskdey - Connecting Workers & Clients in Ghana | Find Local Services"
@@ -68,7 +79,7 @@ const SEOContent = () => (
   />
 );
 
-// Structured Data Component - Copy this too
+// Structured Data Component
 const StructuredData = () => {
   const structuredData = {
     "@context": "https://schema.org",
@@ -106,25 +117,117 @@ export default function Home() {
     howItWorks: false,
     testimonials: false,
     stats: false,
+    faq: false,
   });
+  const [activeFaq, setActiveFaq] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const handleContactFormSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    const loadingToast = toast.loading("Sending your message...");
+    
+    const formData = {
+      name: `${e.target.firstName.value} ${e.target.lastName.value}`,
+      email: e.target.email.value,
+      phone: e.target.phone.value,
+      subject: e.target.subject.value,
+      message: e.target.message.value,
+      timestamp: new Date().toISOString(),
+    };
+    
+    try {
+      const response = await fetch('/api/home', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }
+      
+      toast.dismiss(loadingToast);
+      toast.success("Message sent successfully! We'll get back to you soon.");
+      
+      e.target.reset();
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      toast.error("Failed to send message. Please try again later.");
+      console.error("Error sending message:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
+  // Refs for scroll animations
+  const featuresRef = useRef(null);
+  const howItWorksRef = useRef(null);
+  const testimonialsRef = useRef(null);
+  const statsRef = useRef(null);
+  const faqRef = useRef(null);
 
   useEffect(() => {
-    // Trigger animations on page load
-    const timeout = setTimeout(() => {
-      setIsVisible({
-        hero: true,
-        features: true,
-        howItWorks: true,
-        testimonials: true,
-        stats: true,
+    // Initial animation
+    setIsVisible({
+      hero: true,
+      features: false,
+      howItWorks: false,
+      testimonials: false,
+      stats: false,
+      faq: false,
+    });
+    
+    // Set up intersection observers for scroll animations
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1,
+    };
+    
+    const observerCallback = (entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (entry.target === featuresRef.current) {
+            setIsVisible(prev => ({ ...prev, features: true }));
+          } else if (entry.target === howItWorksRef.current) {
+            setIsVisible(prev => ({ ...prev, howItWorks: true }));
+          } else if (entry.target === testimonialsRef.current) {
+            setIsVisible(prev => ({ ...prev, testimonials: true }));
+          } else if (entry.target === statsRef.current) {
+            setIsVisible(prev => ({ ...prev, stats: true }));
+          } else if (entry.target === faqRef.current) {
+            setIsVisible(prev => ({ ...prev, faq: true }));
+          }
+        }
       });
-    }, 300);
-
-    return () => clearTimeout(timeout);
+    };
+    
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    
+    if (featuresRef.current) observer.observe(featuresRef.current);
+    if (howItWorksRef.current) observer.observe(howItWorksRef.current);
+    if (testimonialsRef.current) observer.observe(testimonialsRef.current);
+    if (statsRef.current) observer.observe(statsRef.current);
+    if (faqRef.current) observer.observe(faqRef.current);
+    
+    return () => {
+      if (featuresRef.current) observer.unobserve(featuresRef.current);
+      if (howItWorksRef.current) observer.unobserve(howItWorksRef.current);
+      if (testimonialsRef.current) observer.unobserve(testimonialsRef.current);
+      if (statsRef.current) observer.unobserve(statsRef.current);
+      if (faqRef.current) observer.unobserve(faqRef.current);
+    };
   }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+  
+  const toggleFaq = (index) => {
+    setActiveFaq(activeFaq === index ? null : index);
   };
 
   const features = [
@@ -160,36 +263,6 @@ export default function Home() {
     },
   ];
 
-  const testimonials = [
-    {
-      name: "Addae Collins",
-      role: "Teacher",
-      content: "Since joining Taskdey, I've been able to find consistent work in my neighborhood. The app has truly changed my life as a vocational worker. I earn 40% more than before and can support my family better.",
-      avatar: "/collins",
-      rating: 5,
-    },
-    {
-      name: "Lukman Sullemana",
-      role: "Client",
-      content: "Finding reliable workers used to be a headache. With Taskdey, I get qualified professionals near me within minutes. It's revolutionary! I've used it for plumbing, electrical work, and carpentry - all excellent experiences.",
-      avatar: "/luke",
-      rating: 5,
-    },
-    {
-      name: "Charles Awuku",
-      role: "IT Personnel",
-      content: "The Taskdey app has helped me grow my client base and increased my monthly income. Vocational work is now respected and profitable. I've been able to expand my business and even hire an apprentice.",
-      avatar: "/cha",
-      rating: 4,
-    },
-    {
-      name: "Richmond Abaa",
-      role: "Client",
-      content: "I love how easy it is to find vetted professionals on Taskdey. The rating system helps me choose the best workers, and the secure payment gives me peace of mind. It's transformed how I maintain my home.",
-      avatar: "/api/placeholder/50/50",
-      rating: 5,
-    },
-  ];
 
   const stats = [
     { value: "2,000+", label: "Active Workers" },
@@ -203,9 +276,32 @@ export default function Home() {
     "Mechanics", "Cleaners", "Gardeners", "Tailors", 
     "Masons", "Welders", "Chefs", "Drivers"
   ];
+  
+  const faqs = [
+    {
+      question: "How do I find workers on Taskdey?",
+      answer: "Simply download the app, create an account, and search for the service you need. You can browse nearby workers, view their profiles and ratings, and book them directly through the app."
+    },
+    {
+      question: "How does payment work?",
+      answer: "Taskdey offers secure in-app payments. You can pay using mobile money, credit/debit cards, or bank transfers. Payment is only released to workers after you confirm that the job has been completed satisfactorily."
+    },
+    {
+      question: "How can I become a service provider?",
+      answer: "Download the app, create a worker account, complete your profile with relevant skills and experience, upload verification documents, and pass our vetting process. Once approved, you can start receiving job requests."
+    },
+    {
+      question: "What areas does Taskdey cover?",
+      answer: "Taskdey currently operates in major cities across Ghana, including Accra, Kumasi, Tamale, Cape Coast, and Takoradi, with plans to expand to more regions soon."
+    },
+    {
+      question: "Is there a guarantee on work done?",
+      answer: "Yes, all work done through Taskdey comes with a 7-day satisfaction guarantee. If you're not satisfied with the work, we facilitate resolution between you and the worker or help find a replacement."
+    }
+  ];
 
   return (
-    <div className="bg-gradient-to-b from-indigo-50 to-white min-h-screen">
+    <div className="min-h-screen overflow-hidden">
       <Head>
         <title>Taskdey - Empowering Vocational Workers in Ghana</title>
         <meta name="description" content="Connect with skilled workers near you. Taskdey bridges the gap between service providers and clients in Ghana." />
@@ -214,105 +310,55 @@ export default function Home() {
         <link rel="alternate" hrefLang="fr" href="https://taskdey.com/fr/" />
       </Head>
 
- {/* Add the SEO components */}
- <SEOContent />
+      {/* Add the SEO components */}
+      <SEOContent />
       <StructuredData />
-      {/* Navigation */}
-      <nav className="bg-white shadow-md fixed w-full z-10">
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <div className="flex items-center">
-            <span className="text-2xl font-bold text-indigo-600">Taskdey</span>
-          </div>
-          
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8">
-            <a href="#features" className="text-gray-700 hover:text-indigo-600 transition duration-300">Features</a>
-            <a href="#how-it-works" className="text-gray-700 hover:text-indigo-600 transition duration-300">How It Works</a>
-            <a href="#testimonials" className="text-gray-700 hover:text-indigo-600 transition duration-300">Testimonials</a>
-            <a href="#services" className="text-gray-700 hover:text-indigo-600 transition duration-300">Services</a>
-            <a href="#download" className="text-gray-700 hover:text-indigo-600 transition duration-300">Download</a>
-          </div>
-          
-          {/* CTA Button */}
-          <div className="hidden md:block">
-            <a href="#download" className="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition duration-300">
-              Get the App
-            </a>
-          </div>
-          
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <button onClick={toggleMenu} className="text-gray-500 hover:text-indigo-600 focus:outline-none">
-              {isMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
-          </div>
+      
+      {/* Hero Section - Modern Redesign */}
+      <section className="relative bg-gradient-to-br from-indigo-900 via-indigo-800 to-indigo-600 overflow-hidden pt-20 lg:pt-24 pb-20">
+        {/* Background pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute -left-40 -top-40 w-80 h-80 rounded-full bg-indigo-500"></div>
+          <div className="absolute right-0 top-1/4 w-96 h-96 rounded-full bg-indigo-300"></div>
+          <div className="absolute left-1/3 bottom-0 w-60 h-60 rounded-full bg-indigo-400"></div>
         </div>
         
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div 
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white"
-            >
-              <div className="container mx-auto px-4 py-3 flex flex-col space-y-4">
-                <a href="#features" onClick={() => setIsMenuOpen(false)} className="text-gray-700 hover:text-indigo-600 transition duration-300">Features</a>
-                <a href="#how-it-works" onClick={() => setIsMenuOpen(false)} className="text-gray-700 hover:text-indigo-600 transition duration-300">How It Works</a>
-                <a href="#testimonials" onClick={() => setIsMenuOpen(false)} className="text-gray-700 hover:text-indigo-600 transition duration-300">Testimonials</a>
-                <a href="#services" onClick={() => setIsMenuOpen(false)} className="text-gray-700 hover:text-indigo-600 transition duration-300">Services</a>
-                <a href="#download" onClick={() => setIsMenuOpen(false)} className="text-gray-700 hover:text-indigo-600 transition duration-300">Download</a>
-                <a href="#download" onClick={() => setIsMenuOpen(false)} className="bg-indigo-600 text-white px-6 py-2 rounded-full text-center hover:bg-indigo-700 transition duration-300">
-                  Get the App
-                </a>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4">
-        <div className="container mx-auto">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div 
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: isVisible.hero ? 1 : 0, y: isVisible.hero ? 0 : 50 }}
               transition={{ duration: 0.8 }}
-              className="text-center md:text-left"
+              className="text-center lg:text-left text-white"
             >
-              <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-                <span className="inline-block">Connecting </span>
-                <span className="text-indigo-600 inline-block">Workers</span>
-                <span className="inline-block"> to </span>
-                <span className="text-indigo-600 inline-block">Opportunities</span>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                Connect with <span className="text-indigo-300">Local Skills</span>,<br/>
+                Unlock <span className="text-indigo-300">Opportunities</span>
               </h1>
-              <p className="text-xl text-gray-600 mb-8">
-                Taskdey empowers vocational workers in Ghana by connecting them with clients in need of their services, all in one convenient app.
+              <p className="text-xl text-indigo-100 mb-8 max-w-lg mx-auto lg:mx-0">
+                Taskdey empowers vocational workers in Ghana while helping clients find reliable service providers - all in one seamless app.
               </p>
               
-              <div className="flex flex-col md:flex-row justify-center md:justify-start space-y-4 md:space-y-0 md:space-x-4 mb-8">
-                <a href="#download" className="bg-indigo-600 text-white px-8 py-3 rounded-full hover:bg-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300">
-                  Download Now
+              <div className="flex flex-col sm:flex-row justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
+                <a href="#download" className="bg-white text-indigo-700 px-8 py-4 rounded-lg hover:bg-indigo-100 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2 font-semibold transition duration-300 transform hover:-translate-y-1">
+                  <Download className="h-5 w-5" />
+                  <span>Download Now</span>
                 </a>
-                <a href="#how-it-works" className="bg-white text-indigo-600 border border-indigo-600 px-8 py-3 rounded-full hover:bg-indigo-50 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300">
-                  Learn More
+                <a href="#how-it-works" className="bg-transparent border border-white text-white px-8 py-4 rounded-lg hover:bg-white/10 flex items-center justify-center space-x-2 font-semibold transition duration-300 transform hover:-translate-y-1">
+                  <span>Learn More</span>
+                  <ChevronRight className="h-5 w-5" />
                 </a>
               </div>
               
-              <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-                {workerServices.slice(0, 6).map((service, index) => (
-                  <span key={index} className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm">
+              <div className="flex flex-wrap gap-3 justify-center lg:justify-start bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+                <span className="text-sm text-white font-medium">Popular Services:</span>
+                {workerServices.slice(0, 4).map((service, index) => (
+                  <span key={index} className="px-3 py-1 bg-white/20 text-white rounded-full text-sm backdrop-blur-sm">
                     {service}
                   </span>
                 ))}
-                <span className="px-3 py-1 bg-indigo-600 text-white rounded-full text-sm">
-                  +{workerServices.length - 6} more
+                <span className="px-3 py-1 bg-indigo-500 text-white rounded-full text-sm">
+                  +{workerServices.length - 4} more
                 </span>
               </div>
             </motion.div>
@@ -371,28 +417,36 @@ export default function Home() {
             </motion.div>
           </div>
         </div>
+        
+        {/* Wave divider */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" fill="#ffffff" preserveAspectRatio="none">
+            <path d="M0,96L48,85.3C96,75,192,53,288,48C384,43,480,53,576,69.3C672,85,768,107,864,106.7C960,107,1056,85,1152,64C1248,43,1344,21,1392,10.7L1440,0L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"></path>
+          </svg>
+        </div>
       </section>
       
-      {/* Stats Section */}
-      <section className="py-12 bg-indigo-600 text-white">
+      {/* Stats Section - Redesigned */}
+      <section ref={statsRef} className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isVisible.stats ? 1 : 0, y: isVisible.stats ? 0 : 20 }}
             transition={{ duration: 0.8 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center"
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto"
           >
             {stats.map((stat, index) => (
-              <div key={index} className="p-4">
-                <p className="text-3xl md:text-4xl font-bold mb-1">{stat.value}</p>
-                <p className="text-indigo-200">{stat.label}</p>
+              <div key={index} className="p-4 rounded-xl bg-gradient-to-br from-indigo-50 to-white shadow-md">
+                <p className="text-3xl md:text-4xl font-bold mb-1 text-indigo-600 text-center">{stat.value}</p>
+                <p className="text-gray-600 text-center font-medium">{stat.label}</p>
               </div>
             ))}
           </motion.div>
         </div>
       </section>
-{/* Features Section */}
-<section id="features" className="py-20 bg-white">
+
+      {/* Services Section - Redesigned */}
+      <section id="services" className="py-20 bg-gradient-to-br from-indigo-50 via-white to-indigo-50">
         <div className="container mx-auto px-4">
           <motion.div 
             initial={{ opacity: 0, y: 50 }}
@@ -400,25 +454,67 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
+            <span className="inline-block px-4 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm font-medium mb-4">Our Services</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Discover Services Available</h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Connect with skilled professionals across a wide range of services
+            </p>
+          </motion.div>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 max-w-6xl mx-auto">
+            {workerServices.map((service, index) => (
+              <motion.div 
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: isVisible.features ? 1 : 0, scale: isVisible.features ? 1 : 0.9 }}
+                transition={{ delay: index * 0.05, duration: 0.5 }}
+                className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300 text-center group hover:bg-indigo-600"
+              >
+                <div className="bg-indigo-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-white transition-colors duration-300">
+                  <BriefcaseBusiness className="h-6 w-6 text-indigo-600 group-hover:text-indigo-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 group-hover:text-white transition-colors duration-300">{service}</h3>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section - Redesigned */}
+      <section ref={featuresRef} id="features" className="py-20 bg-white relative overflow-hidden">
+        {/* Background pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute -right-40 -bottom-40 w-80 h-80 rounded-full bg-indigo-500"></div>
+          <div className="absolute left-0 top-1/4 w-96 h-96 rounded-full bg-indigo-300"></div>
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: isVisible.features ? 1 : 0, y: isVisible.features ? 0 : 50 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <span className="inline-block px-4 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm font-medium mb-4">Features</span>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Why Choose Taskdey?</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Our platform is designed to make finding and hiring skilled workers simple, fast, and reliable.
             </p>
           </motion.div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {features.map((feature, index) => (
               <motion.div 
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: isVisible.features ? 1 : 0, y: isVisible.features ? 0 : 30 }}
                 transition={{ delay: index * 0.1, duration: 0.8 }}
-                className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300"
+                className="bg-white rounded-xl p-8 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-white shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300"
               >
-                <div className="mb-4 bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center">
+                <div className="mb-6 bg-indigo-100 w-16 h-16 rounded-2xl flex items-center justify-center">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{feature.title}</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
                 <p className="text-gray-600">{feature.description}</p>
               </motion.div>
             ))}
@@ -426,41 +522,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section id="services" className="py-20 bg-indigo-50">
-        <div className="container mx-auto px-4">
-          <motion.div 
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: isVisible.features ? 1 : 0, y: isVisible.features ? 0 : 50 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Services Available</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Connect with skilled professionals across a wide range of services
-            </p>
-          </motion.div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {workerServices.map((service, index) => (
-              <motion.div 
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: isVisible.features ? 1 : 0, scale: isVisible.features ? 1 : 0.9 }}
-                transition={{ delay: index * 0.05, duration: 0.5 }}
-                className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300 text-center"
-              >
-                <div className="bg-indigo-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <BriefcaseBusiness className="h-6 w-6 text-indigo-600" />
-                </div>
-                <h3 className="font-semibold text-gray-900">{service}</h3>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works Section */}
+      {/* How It Works Section - Redesigned */}
       <section id="how-it-works" className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <motion.div 
@@ -633,205 +695,348 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Testimonials Section */}
-      <section id="testimonials" className="py-20 bg-indigo-50">
+      
+      {/* FAQ Section - Redesigned */}
+      <section ref={faqRef} id="faq" className="py-20 bg-gradient-to-br from-indigo-50 via-white to-indigo-50">
         <div className="container mx-auto px-4">
           <motion.div 
             initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: isVisible.testimonials ? 1 : 0, y: isVisible.testimonials ? 0 : 50 }}
+            animate={{ opacity: isVisible.faq ? 1 : 0, y: isVisible.faq ? 0 : 50 }}
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Our Users Say</h2>
+            <span className="inline-block px-4 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm font-medium mb-4">FAQ</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Real stories from workers and clients in Ghana who use Taskdey.
+              Find answers to the most common questions about Taskdey.
             </p>
           </motion.div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-            {testimonials.map((testimonial, index) => (
+          <div className="max-w-3xl mx-auto">
+            {faqs.map((faq, index) => (
               <motion.div 
                 key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: isVisible.testimonials ? 1 : 0, scale: isVisible.testimonials ? 1 : 0.9 }}
-                transition={{ delay: index * 0.2, duration: 0.8 }}
-                className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition duration-300 relative"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: isVisible.faq ? 1 : 0, y: isVisible.faq ? 0 : 20 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                className="mb-4"
               >
-                <div className="mb-4 flex items-center">
-                  <div className="bg-indigo-100 rounded-full overflow-hidden w-12 h-12 mr-4">
-                    <Image src={testimonial.avatar} alt={testimonial.name} width={50} height={50} />
+                <button 
+                  onClick={() => toggleFaq(index)}
+                  className={`w-full text-left p-5 rounded-xl flex justify-between items-center transition duration-300 ${activeFaq === index ? 'bg-indigo-600 text-white shadow-lg' : 'bg-white text-gray-900 hover:bg-indigo-50 shadow'}`}
+                >
+                  <span className="font-semibold text-lg">{faq.question}</span>
+                  <div className={`transform transition-transform duration-300 ${activeFaq === index ? 'rotate-180' : ''}`}>
+                    <ChevronRight className="w-5 h-5" />
                   </div>
-                  <div>
-                    <h3 className="font-bold text-gray-900">{testimonial.name}</h3>
-                    <p className="text-gray-600 text-sm">{testimonial.role}</p>
-                  </div>
-                </div>
-                <div className="mb-3">
-                  <div className="flex text-yellow-400">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4" fill={i < testimonial.rating ? "currentColor" : "none"} />
-                    ))}
-                  </div>
-                </div>
-                <p className="text-gray-600 text-sm italic">{testimonial.content}</p>
-                <div className="absolute -top-2 -right-2 bg-indigo-600 text-white rounded-full w-8 h-8 flex items-center justify-center">
-                  <MessageSquare className="h-4 w-4" />
-                </div>
+                </button>
+                
+                <AnimatePresence>
+                  {activeFaq === index && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="bg-white border border-gray-100 rounded-b-xl p-5 shadow-inner">
+                        <p className="text-gray-700">{faq.answer}</p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             ))}
+          </div>
+          
+          <div className="text-center mt-10">
+            <p className="text-gray-600 mb-6">Have more questions? We're here to help.</p>
+            <a href="#contact" className="inline-flex items-center space-x-2 text-indigo-600 hover:text-indigo-800 font-medium">
+              <span>Contact Support</span>
+              <ChevronRight className="h-4 w-4" />
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Download Section */}
-      <section id="download" className="py-20 bg-indigo-600 text-white">
+      
+      {/* Download Section - Redesigned */}
+      <section id="download" className="py-20 bg-gradient-to-br from-indigo-900 via-indigo-800 to-indigo-700 text-white">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="text-center md:text-left">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">Get Started with Taskdey Today</h2>
-              <p className="text-xl mb-8 text-indigo-100">
-                Download the Taskdey app and join thousands of users transforming how vocational work gets done in Ghana.
+          <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
+            <div>
+              <span className="inline-block px-4 py-1 rounded-full bg-indigo-700 text-indigo-100 text-sm font-medium mb-4">Get Started</span>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">Download the Taskdey App Today</h2>
+              <p className="text-xl text-indigo-200 mb-8">
+                Join thousands of satisfied users across Ghana. Download our app and transform how you find work or hire skilled professionals.
               </p>
               
               <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 justify-center md:justify-start">
-                <a href="https://apps.apple.com/gh/app/taskdey/id6739984570" className="bg-black text-white px-6 py-3 rounded-xl flex items-center justify-center space-x-3 hover:bg-gray-900 transition duration-300">
-                  <div>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M17.577 11.429c-.013-1.287.382-2.555 1.132-3.603-1.111-1.538-2.902-2.46-4.813-2.47-2.001-.076-3.919 1.17-4.932 1.17-1.027 0-2.57-1.156-4.241-1.12-1.768.055-3.426.994-4.513 2.484-1.98 3.383-.504 8.347 1.395 11.077.947 1.338 2.05 2.82 3.496 2.767 1.42-.057 1.951-.889 3.669-.889 1.704 0 2.203.889 3.678.851 1.531-.025 2.496-1.349 3.413-2.698.777-1.053 1.35-2.241 1.694-3.508-1.872-.823-3.065-2.645-3.068-4.685h.09v1.624z"/>
-                      <path d="M14.623 3.446c-1.199-1.543-3.096-2.334-5.007-2.072.178 1.312.752 2.531 1.643 3.492.869.988 2.09 1.648 3.41 1.853.15-1.147-.229-2.295-1.046-3.273z"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="text-xs">Download on the</div>
-                    <div className="font-bold text-lg">App Store</div>
-                  </div>
-                </a>
-                
-                <a href="https://play.google.com/store/apps/details?id=com.barrister1990.joymish&pcampaignid=web_share" className="bg-black text-white px-6 py-3 rounded-xl flex items-center justify-center space-x-3 hover:bg-gray-900 transition duration-300">
-                  <div>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.563v21.02c0 .193.045.383.112.562l11.02-11.099L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="text-xs">GET IT ON</div>
-                    <div className="font-bold text-lg">Google Play</div>
-                  </div>
-                </a>
+                      <a href="https://apps.apple.com/gh/app/taskdey/id6739984570" className="bg-black text-white px-6 py-3 rounded-xl flex items-center justify-center space-x-3 hover:bg-gray-900 transition duration-300">
+                        <div>
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.577 11.429c-.013-1.287.382-2.555 1.132-3.603-1.111-1.538-2.902-2.46-4.813-2.47-2.001-.076-3.919 1.17-4.932 1.17-1.027 0-2.57-1.156-4.241-1.12-1.768.055-3.426.994-4.513 2.484-1.98 3.383-.504 8.347 1.395 11.077.947 1.338 2.05 2.82 3.496 2.767 1.42-.057 1.951-.889 3.669-.889 1.704 0 2.203.889 3.678.851 1.531-.025 2.496-1.349 3.413-2.698.777-1.053 1.35-2.241 1.694-3.508-1.872-.823-3.065-2.645-3.068-4.685h.09v1.624z"/>
+                            <path d="M14.623 3.446c-1.199-1.543-3.096-2.334-5.007-2.072.178 1.312.752 2.531 1.643 3.492.869.988 2.09 1.648 3.41 1.853.15-1.147-.229-2.295-1.046-3.273z"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="text-xs">Download on the</div>
+                          <div className="font-bold text-lg">App Store</div>
+                        </div>
+                      </a>
+                      
+                      <a href="https://play.google.com/store/apps/details?id=com.barrister1990.joymish&pcampaignid=web_share" className="bg-black text-white px-6 py-3 rounded-xl flex items-center justify-center space-x-3 hover:bg-gray-900 transition duration-300">
+                        <div>
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.563v21.02c0 .193.045.383.112.562l11.02-11.099L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="text-xs">GET IT ON</div>
+                          <div className="font-bold text-lg">Google Play</div>
+                        </div>
+                      </a>
+                    </div>
+              
+              <div className="bg-indigo-800/50 p-4 rounded-xl backdrop-blur-sm flex items-center space-x-3">
+                <AlertCircle className="h-6 w-6 text-amber-300 flex-shrink-0" />
+                <p className="text-indigo-100 text-sm">By downloading the app, you agree to our Terms of Service and Privacy Policy.</p>
               </div>
             </div>
             
             <div className="flex justify-center md:justify-end">
-              <div className="relative">
-              <div style={{ position: 'relative', width: '256px', height: '550px' }}>
-  <Image 
-    src="/down.png"
-    alt="Taskdey App"
-    fill
-    style={{ objectFit: 'cover' }}
-    className="rounded-2xl"
-  />
-</div>
-                
-                {/* QR code */}
-                <div className="absolute -left-16 bottom-16 bg-white p-4 rounded-xl shadow-lg">
-                  <div className="w-20 h-20 bg-gray-200">
-                    <div className="relative w-full h-full">
-                      <Image 
-                        src="/qrcode.png" 
-                        alt="QR Code" 
-                        fill
-                      />
+                    <div className="relative">
+                    <div style={{ position: 'relative', width: '256px', height: '550px' }}>
+        <Image 
+          src="/down.png"
+          alt="Taskdey App"
+          fill
+          style={{ objectFit: 'cover' }}
+          className="rounded-2xl"
+        />
+      </div>
+                      
+                      {/* QR code */}
+                      <div className="absolute -left-16 bottom-16 bg-white p-4 rounded-xl shadow-lg">
+                        <div className="w-20 h-20 bg-gray-200">
+                          <div className="relative w-full h-full">
+                            <Image 
+                              src="/qrcode.png" 
+                              alt="QR Code" 
+                              fill
+                            />
+                          </div>
+                        </div>
+                        <p className="text-xs text-center mt-2 text-gray-600">Scan to download</p>
+                      </div>
                     </div>
                   </div>
-                  <p className="text-xs text-center mt-2 text-gray-600">Scan to download</p>
-                </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* CTA Section - New */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-2xl p-10 text-center text-white shadow-xl relative overflow-hidden">
+            {/* Background pattern */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute -right-20 -bottom-20 w-64 h-64 rounded-full bg-white"></div>
+              <div className="absolute left-10 top-10 w-32 h-32 rounded-full bg-white"></div>
+            </div>
+            
+            <div className="relative z-10">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform How You Work?</h2>
+              <p className="text-xl text-indigo-100 mb-10 max-w-xl mx-auto">
+                Whether you're looking for work or need to hire skilled professionals, Taskdey makes it simple, reliable, and efficient.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <a href="#download" className="bg-white text-indigo-700 px-8 py-4 rounded-lg hover:bg-indigo-100 shadow-lg flex items-center justify-center space-x-2 font-semibold transition duration-300">
+                  <Download className="h-5 w-5" />
+                  <span>Download Now</span>
+                </a>
+                <a href="#contact" className="bg-transparent border border-white text-white px-8 py-4 rounded-lg hover:bg-white/10 flex items-center justify-center space-x-2 font-semibold transition duration-300">
+                  <MessageSquare className="h-5 w-5" />
+                  <span>Contact Us</span>
+                </a>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-{/* Footer */}
-<footer className="bg-gray-900 text-white py-12">
+      {/* Contact Us Section */}
+<section id="contact" className="py-20 bg-gray-50">
   <div className="container mx-auto px-4">
-    <div className="grid md:grid-cols-4 gap-8">
-      <div>
-        <h3 className="text-2xl font-bold mb-4 text-indigo-400">Taskdey</h3>
-        <p className="text-gray-400 mb-4">
-          Connecting skilled workers with clients across Ghana. Empowering vocational work through technology.
+    <div className="max-w-5xl mx-auto">
+      <div className="text-center mb-12">
+        <span className="inline-block px-4 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm font-medium mb-4">Get In Touch</span>
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Contact Us</h2>
+        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          Have questions or feedback? We're here to help. Reach out to our team and we'll get back to you soon.
         </p>
-        <div className="flex space-x-4">
-          <a href="#" className="text-gray-400 hover:text-white transition duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-            </svg>
-          </a>
-          <a href="https://www.linkedin.com/showcase/joymish/?viewAsMember=true" className="text-gray-400 hover:text-white transition duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-            </svg>
-          </a>
-          <a href="https://www.youtube.com/channel/UCa-m7eGM6LF2GzatXb_MCww" className="text-gray-400 hover:text-white transition duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
-            </svg>
-          </a>
+      </div>
+      
+      <div className="grid md:grid-cols-5 gap-8">
+        {/* Contact Information */}
+        <div className="md:col-span-2 bg-indigo-600 text-white p-8 rounded-xl shadow-lg">
+          <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
+          
+          <div className="space-y-6">
+            <div className="flex items-start space-x-4">
+              <div className="bg-indigo-500 rounded-full p-2 mt-1">
+                <MessageSquare className="h-5 w-5" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-lg">Email Us</h4>
+                <p className="text-indigo-200">taskdeygh@gmail.com</p>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-4">
+              <div className="bg-indigo-500 rounded-full p-2 mt-1">
+                <Smartphone className="h-5 w-5" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-lg">Call Us</h4>
+                <p className="text-indigo-200">+233 24 1940 783</p>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-4">
+              <div className="bg-indigo-500 rounded-full p-2 mt-1">
+                <Map className="h-5 w-5" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-lg">Office</h4>
+                <p className="text-indigo-200">Kasoa</p>
+                <p className="text-indigo-200">Accra, Ghana</p>
+              </div>
+            </div>
+          </div>
+          
+
         </div>
-      </div>
-      
-      <div>
-        <h4 className="font-bold mb-4">Company</h4>
-        <ul className="space-y-2">
-          <Link href="/about">
-          <li className="text-gray-400 hover:text-white transition duration-300">About Us</li>
-         </Link>
-        </ul>
-      </div>
-      
-      <div>
-        <h4 className="font-bold mb-4">Resources</h4>
-        <ul className="space-y-2">
         
-          <li>
-            <Link href="/terms" className="text-gray-400 hover:text-white transition duration-300">Terms of Service</Link>
+        {/* Contact Form */}
+        <div className="md:col-span-3 bg-white p-8 rounded-xl shadow-lg">
+          <h3 className="text-2xl font-bold text-gray-900 mb-6">Send Us a Message</h3>
+          
+          <form onSubmit={handleContactFormSubmit}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label htmlFor="firstName" className="block text-gray-700 font-medium mb-2">First Name</label>
+            <input 
+              type="text" 
+              id="firstName" 
+              name="firstName" 
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+              placeholder="John"
+              required
+              disabled={isSubmitting}
+            />
+          </div>
+          <div>
+            <label htmlFor="lastName" className="block text-gray-700 font-medium mb-2">Last Name</label>
+            <input 
+              type="text" 
+              id="lastName" 
+              name="lastName"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+              placeholder="Doe"
+              required
+              disabled={isSubmitting}
+            />
+          </div>
+        </div>
         
-            </li>
-        </ul>
-      </div>
-      
-      <div>
-        <h4 className="font-bold mb-4">Newsletter</h4>
-        <p className="text-gray-400 mb-4">Stay updated with our latest features and news.</p>
-        <form className="flex flex-col space-y-2">
+        <div className="mb-6">
+          <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Email Address</label>
           <input 
             type="email" 
-            placeholder="Enter your email" 
-            className="bg-gray-800 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            id="email" 
+            name="email"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+            placeholder="john@example.com"
+            required
+            disabled={isSubmitting}
           />
-          <button className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition duration-300">
-            Subscribe
-          </button>
-        </form>
+        </div>
+        
+        <div className="mb-6">
+          <label htmlFor="phone" className="block text-gray-700 font-medium mb-2">Phone Number</label>
+          <input 
+            type="tel" 
+            id="phone" 
+            name="phone"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+            placeholder="+1 (123) 456-7890"
+            disabled={isSubmitting}
+          />
+        </div>
+        
+        <div className="mb-6">
+          <label htmlFor="subject" className="block text-gray-700 font-medium mb-2">Subject</label>
+          <select 
+            id="subject" 
+            name="subject"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            required
+            disabled={isSubmitting}
+          >
+            <option value="">Select a subject</option>
+            <option value="General Inquiry">General Inquiry</option>
+            <option value="Technical Support">Technical Support</option>
+            <option value="Feature Request">Feature Request</option>
+            <option value="Pricing Question">Pricing Question</option>
+            <option value="Partnership Opportunity">Partnership Opportunity</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        
+        <div className="mb-6">
+          <label htmlFor="message" className="block text-gray-700 font-medium mb-2">Your Message</label>
+          <textarea 
+            id="message" 
+            name="message"
+            rows="5" 
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+            placeholder="Please describe how we can help you..."
+            required
+            disabled={isSubmitting}
+          ></textarea>
+        </div>
+        
+        <div className="mb-6 flex items-start">
+          <input 
+            type="checkbox" 
+            id="privacy" 
+            name="privacy"
+            className="mt-1 h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+            required
+            disabled={isSubmitting}
+          />
+          <label htmlFor="privacy" className="ml-2 block text-sm text-gray-700">
+            I agree to the <a href="#" className="text-indigo-600 hover:text-indigo-800">Privacy Policy</a> and consent to Taskdey processing my data.
+          </label>
+        </div>
+        
+        <button 
+          type="submit" 
+          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 flex items-center justify-center"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Sending...' : 'Send Message'}
+        </button>
+      </form>
+        </div>
       </div>
-    </div>
-    
-    <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-      <p className="text-gray-400 text-sm">© {new Date().getFullYear()} Taskdey. All rights reserved.</p>
-      <div className="flex space-x-6 mt-4 md:mt-0">
-        <Link href="/privacy">
-        <p className="text-gray-400 hover:text-white transition duration-300 text-sm">Privacy Policy</p>
-   
-        </Link>
-        <Link href="/terms" >
-        <p className="text-gray-400 hover:text-white transition duration-300 text-sm">Terms of Service</p>
-      
-        </Link>
-      </div>
+      <Toaster position="bottom-center" />
     </div>
   </div>
-</footer>
+</section>
     </div>
   );
 }
