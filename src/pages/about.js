@@ -325,7 +325,7 @@ export default function AboutPage() {
             <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Meet Our Team</h2>
             <div className="w-24 h-1 bg-indigo-600 mx-auto mb-8"></div>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              The passionate innovators driving Taskdey's mission forward
+              The passionate innovators driving Taskdey&apos;s mission forward
             </p>
           </div>
           
@@ -359,7 +359,7 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-2">Join Our Team</h3>
-                <p className="text-indigo-100 mb-6">We're always looking for talented individuals to join our mission</p>
+                <p className="text-indigo-100 mb-6">We&apos;re always looking for talented individuals to join our mission</p>
                 <a className="inline-block px-6 py-3 bg-white text-indigo-600 font-medium rounded-lg transition duration-300 hover:bg-opacity-90">
                   View Openings
                 </a>
