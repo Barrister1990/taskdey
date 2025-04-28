@@ -751,7 +751,7 @@ export default function Home() {
           </div>
           
           <div className="text-center mt-10">
-            <p className="text-gray-600 mb-6">Have more questions? We're here to help.</p>
+            <p className="text-gray-600 mb-6">Have more questions? We&apos;sre here to help.</p>
             <a href="#contact" className="inline-flex items-center space-x-2 text-indigo-600 hover:text-indigo-800 font-medium">
               <span>Contact Support</span>
               <ChevronRight className="h-4 w-4" />
@@ -849,7 +849,7 @@ export default function Home() {
             <div className="relative z-10">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform How You Work?</h2>
               <p className="text-xl text-indigo-100 mb-10 max-w-xl mx-auto">
-                Whether you're looking for work or need to hire skilled professionals, Taskdey makes it simple, reliable, and efficient.
+                Whether you&apos;sre looking for work or need to hire skilled professionals, Taskdey makes it simple, reliable, and efficient.
               </p>
               
               <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
@@ -875,7 +875,7 @@ export default function Home() {
         <span className="inline-block px-4 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm font-medium mb-4">Get In Touch</span>
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Contact Us</h2>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Have questions or feedback? We're here to help. Reach out to our team and we'll get back to you soon.
+          Have questions or feedback? We&apos;sre here to help. Reach out to our team and we&apos;sll get back to you soon.
         </p>
       </div>
       
