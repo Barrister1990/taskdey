@@ -307,7 +307,6 @@ export default function Home() {
         <meta name="description" content="Connect with skilled workers near you. Taskdey bridges the gap between service providers and clients in Ghana." />
         <link rel="icon" href="/favicon.ico" />
         <link rel="alternate" hrefLang="en" href="https://taskdey.com/" />
-        <link rel="alternate" hrefLang="fr" href="https://taskdey.com/fr/" />
       </Head>
 
       {/* Add the SEO components */}
