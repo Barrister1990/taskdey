@@ -119,9 +119,9 @@ const Footer = () => {
             <Link href="/terms" className="text-gray-400 hover:text-white transition duration-300 text-sm">
               Terms of Service
             </Link>
-            <Link href="/cookies" className="text-gray-400 hover:text-white transition duration-300 text-sm">
-              Cookie Policy
-            </Link>
+            <a href="https://www.charlesawuku.com/" className="text-gray-400 hover:text-white transition duration-300 text-sm">
+              Contact Developer
+            </a>
           </div>
         </div>
       </div>
