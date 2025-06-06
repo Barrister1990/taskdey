@@ -202,7 +202,7 @@ export default function PrivacyPolicy() {
                       Your Privacy Matters
                     </h2>
                     <p className="text-gray-600 dark:text-gray-300">
-                      At Taskdey, we're committed to protecting your personal information and being transparent about how we collect, use, and share your data. This policy explains our practices in clear, understandable terms.
+                      At Taskdey, we are committed to protecting your personal information and being transparent about how we collect, use, and share your data. This policy explains our practices in clear, understandable terms.
                     </p>
                   </div>
                 </div>
@@ -261,7 +261,7 @@ export default function PrivacyPolicy() {
                     Have Questions About Privacy?
                   </h3>
                   <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    If you have any questions or concerns about our privacy practices, we're here to help.
+                    If you have any questions or concerns about our privacy practices, we are here to help.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <a

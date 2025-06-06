@@ -365,7 +365,7 @@ export default function TermsPage() {
                     Questions About Our Terms?
                   </h3>
                   <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    If you have any questions or concerns about our terms and conditions, please don't hesitate to reach out.
+                    If you have any questions or concerns about our terms and conditions, please don&apos;t hesitate to reach out.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <a

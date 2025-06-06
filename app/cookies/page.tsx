@@ -241,7 +241,7 @@ export default function CookiesPolicy() {
                   Questions About Cookies?
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
-                  If you have any questions about our cookie practices or need help managing your preferences, we're here to help.
+                  If you have any questions about our cookie practices or need help managing your preferences, we&apos;re here to help.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <a

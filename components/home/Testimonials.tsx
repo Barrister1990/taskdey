@@ -176,7 +176,7 @@ export default function Testimonials() {
 
                     {/* Testimonial Text */}
                     <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6 line-clamp-4">
-                      "{testimonial.content}"
+                      &apos;{testimonial.content}&apos;
                     </p>
 
                     {/* Service Badge */}

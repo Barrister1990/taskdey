@@ -31,7 +31,7 @@ export default function Team() {
           <div className="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 mx-auto rounded-full mb-6"></div>
           
           <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto text-base md:text-lg leading-relaxed">
-            The passionate individuals behind Taskdey's mission to transform
+            The passionate individuals behind Taskdey&apos;s mission to transform
             vocational services in Ghana.
           </p>
         </motion.div>
@@ -151,7 +151,7 @@ export default function Team() {
             whileTap={{ scale: 0.95 }}
             className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group"
           >
-            <span>We're Hiring</span>
+            <span>We are Hiring</span>
             <div className="ml-2 w-5 h-5 bg-white/20 rounded-md group-hover:translate-x-1 transition-transform duration-200"></div>
           </motion.button>
         </motion.div>

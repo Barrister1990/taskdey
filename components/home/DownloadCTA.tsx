@@ -104,7 +104,7 @@ export default function DownloadCTA({
               className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto mb-8 leading-relaxed"
               variants={itemVariants}
             >
-              Join thousands of satisfied users on Ghana's leading service marketplace.
+              Join thousands of satisfied users on Ghana&apos;s leading service marketplace.
               Download Taskdey today and experience the difference.
             </motion.p>
 

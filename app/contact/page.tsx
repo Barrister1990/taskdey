@@ -175,7 +175,7 @@ const ContactPage: React.FC = () => {
               Get in <span className="text-indigo-600 dark:text-indigo-400">Touch</span>
             </h1>
             <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-8">
-              Have questions about Taskdey? We're here to help. Reach out to our team and we'll get back to you as soon as possible.
+              Have questions about Taskdey? We&apos;re here to help. Reach out to our team and we&apos;ll get back to you as soon as possible.
             </p>
             
             {/* Stats */}
@@ -373,10 +373,10 @@ const ContactPage: React.FC = () => {
               <div className="order-1 lg:order-2">
                 <div className="lg:pl-8">
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                    Let's start a conversation
+                    Let&apos;s start a conversation
                   </h2>
                   <p className="text-gray-600 dark:text-gray-400 mb-8">
-                    We're here to help and answer any question you might have. We look forward to hearing from you.
+                    We&apos;re here to help and answer any question you might have. We look forward to hearing from you.
                   </p>
 
                   {/* Office Hours */}

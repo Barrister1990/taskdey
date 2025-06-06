@@ -40,7 +40,7 @@ const TikTokIcon = ({ className = 'w-5 h-5' }) => (
               Taskdey
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Ghana's premier service platform
+              Ghana&apos;s premier service platform
             </p>
           </div>
 
@@ -132,7 +132,7 @@ const TikTokIcon = ({ className = 'w-5 h-5' }) => (
                   Taskdey
                 </h3>
                 <p className="text-slate-600 dark:text-slate-300 mt-4 leading-relaxed">
-                  Ghana's premier platform connecting skilled professionals with clients. 
+                  Ghana&apos;s premier platform connecting skilled professionals with clients. 
                   Building trust through quality service delivery.
                 </p>
               </div>

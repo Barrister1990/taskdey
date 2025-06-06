@@ -56,7 +56,7 @@ export default function Vision() {
               </div>
               
               <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed mb-4 sm:mb-6">
-                To be Ghana's leading platform connecting skilled workers with clients,
+                To be Ghana&apos;s leading platform connecting skilled workers with clients,
                 creating opportunities and fostering economic growth in our communities
                 through innovative technology and trusted partnerships.
               </p>

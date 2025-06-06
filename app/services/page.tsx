@@ -245,8 +245,8 @@ export default function Services() {
             Professional Services Marketplace
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-            Ghana's premier platform connecting skilled professionals with clients. 
-            Whether you're looking for services or offering your expertise, Taskdey is your gateway to success.
+            Ghana&apos;s premier platform connecting skilled professionals with clients. 
+            Whether you are looking for services or offering your expertise, Taskdey is your gateway to success.
           </p>
           
           {/* Stats */}
