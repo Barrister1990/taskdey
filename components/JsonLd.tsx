@@ -1,6 +1,6 @@
 "use client";
 
-import { Organization, WebSite, SoftwareApplication, WithContext } from "schema-dts";
+import { Organization, SoftwareApplication, WebSite, WithContext } from "schema-dts";
 
 export function JsonLd() {
   const organizationData: WithContext<Organization> = {
@@ -41,8 +41,7 @@ export function JsonLd() {
       target: {
         "@type": "EntryPoint",
         urlTemplate: "https://taskdey.com/services?q={search_term_string}",
-      },
-      "query-input": "required name=search_term_string",
+      }
     },
   };
 
