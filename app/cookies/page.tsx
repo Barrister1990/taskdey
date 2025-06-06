@@ -1,3 +1,5 @@
+"use client";
+
 import { ChevronDown, Cookie, Eye, FileText, Globe, Mail, Settings, Shield } from 'lucide-react';
 import { useState } from 'react';
 

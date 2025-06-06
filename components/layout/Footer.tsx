@@ -245,13 +245,7 @@ const TikTokIcon = ({ className = 'w-5 h-5' }) => (
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/help"
-                    className="text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300 flex items-center group"
-                  >
-                    <span className="w-1 h-1 bg-indigo-600 dark:bg-indigo-400 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                    Help Center
-                  </Link>
+                  
                 </li>
               </ul>
 
