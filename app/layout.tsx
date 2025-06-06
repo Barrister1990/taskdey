@@ -1,12 +1,12 @@
+import { JsonLd } from "@/components/JsonLd";
+import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
+import WhatsAppButton from "@/components/layout/WhatsAppButton";
+import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/providers/ThemeProvider";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import WhatsAppButton from "@/components/layout/WhatsAppButton";
-import { JsonLd } from "@/components/JsonLd";
-import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,6 +16,11 @@ export const metadata: Metadata = {
     default: "Taskdey - Trusted Vocational Services, On Demand in Ghana",
     template: "%s | Taskdey - Professional Services Marketplace"
   },
+  icons: {
+  icon: '/favicon.ico',
+  shortcut: '/favicon.ico',
+  apple: '/apple-touch-icon.png',
+},
   description: "Find verified local workers in Ghana for all your service needs. Professional electricians, plumbers, tailors, mechanics, and more. Free to use, secure payments, and instant booking.",
   keywords: [
     "vocational services Ghana",
@@ -80,10 +85,6 @@ export const metadata: Metadata = {
     creator: '@taskdey',
     site: '@taskdey',
   },
-  verification: {
-    google: 'your-google-verification-code',
-    yandex: 'your-yandex-verification-code',
-  },
   alternates: {
     canonical: 'https://taskdey.com',
     languages: {
@@ -102,6 +103,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
         <meta name="theme-color" content="#4F46E5" />
         <meta name="mobile-web-app-capable" content="yes" />
