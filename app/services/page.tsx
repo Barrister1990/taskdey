@@ -23,8 +23,25 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 
+
+interface Service {
+  name: string;
+  providers: number;
+  rating: number;
+  price: number;
+  demand: "high" | "medium" | "low";
+}
+interface ServiceWithCategory extends Service {
+  category: string;
+}
+interface Category {
+  name: string;
+  icon: any;
+  color: string;
+}
+type CategoryName = "Home & Living" | "Personal Care" | "Technical" | "Maintenance" | "Professional" | "Education" | "Health & Wellness" | "Transportation";
 // Categories with icons
-const categories = [
+const categories: Category[] = [
   { name: "All", icon: Filter, color: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300" },
   { name: "Home & Living", icon: Home, color: "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300" },
   { name: "Personal Care", icon: User, color: "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300" },
@@ -37,7 +54,7 @@ const categories = [
 ];
 
 // Comprehensive services by category with reduced provider numbers
-const servicesByCategory = {
+const servicesByCategory: Record<CategoryName, Service[]> = {
   "Home & Living": [
     { name: "House Cleaning", providers: 18, rating: 4.8, price: 25, demand: "high" },
     { name: "Gardening & Landscaping", providers: 12, rating: 4.6, price: 35, demand: "high" },
@@ -135,9 +152,12 @@ const servicesByCategory = {
     { name: "Courier Services", providers: 17, rating: 4.3, price: 25, demand: "high" },
   ],
 };
-
-const ServiceCard = ({ service, category }) => {
-  const getDemandColor = (demand) => {
+interface ServiceCardProps {
+  service: ServiceWithCategory;
+  category: string;
+}
+const ServiceCard: React.FC<ServiceCardProps> = ({ service, category }) => {
+  const getDemandColor = (demand: Service["demand"]): string => {
     switch (demand) {
       case "high": return "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300";
       case "medium": return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300";
@@ -217,19 +237,19 @@ export default function Services() {
       return allServices;
     }
 
-    const categoryServices = servicesByCategory[activeCategory] || [];
+const categoryServices = servicesByCategory[activeCategory as CategoryName] || [];
     if (searchTerm) {
-      return categoryServices.filter(service =>
+      return categoryServices.filter((service: Service) =>
         service.name.toLowerCase().includes(searchTerm.toLowerCase())
-      ).map(service => ({ ...service, category: activeCategory }));
+      ).map((service: Service) => ({ ...service, category: activeCategory }));
     }
-    return categoryServices.map(service => ({ ...service, category: activeCategory }));
+    return categoryServices.map((service: Service) => ({ ...service, category: activeCategory }));
   };
 
   const totalServices = Object.values(servicesByCategory).flat().length;
   const totalProviders = Object.values(servicesByCategory)
     .flat()
-    .reduce((acc, service) => acc + service.providers, 0);
+    .reduce((acc: number, service: Service) => acc + service.providers, 0);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50 dark:from-gray-900 dark:to-indigo-950 pt-20 pb-16">
