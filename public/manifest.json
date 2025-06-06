@@ -1,20 +1,22 @@
 {
-    "name": "Taskdey - Connecting Workers & Clients in Ghana",
-    "short_name": "Taskdey",
-    "icons": [
-      {
-        "src": "/android-chrome-192x192.png",
-        "sizes": "192x192",
-        "type": "image/png"
-      },
-      {
-        "src": "/android-chrome-512x512.png",
-        "sizes": "512x512",
-        "type": "image/png"
-      }
-    ],
-    "theme_color": "#4f46e5",
-    "background_color": "#ffffff",
-    "display": "standalone",
-    "start_url": "/"
-  }
+  "name": "Taskdey - Professional Service Marketplace",
+  "short_name": "Taskdey",
+  "description": "Find and book verified local service professionals in Ghana",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4F46E5",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
