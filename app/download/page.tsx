@@ -66,7 +66,7 @@ export default function Download() {
                 className="w-full sm:w-auto h-14 px-8 bg-black hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-700 text-white rounded-2xl shadow-lg dark:shadow-black/50 transition-all duration-300 hover:shadow-xl dark:hover:shadow-black/70"
                 onClick={() =>
                   window.open(
-                    "https://play.google.com/store/apps/details?id=com.taskdey.app",
+                    "https://play.google.com/store/apps/details?id=com.barrister1990.joymish&pcampaignid=web_share",
                     "_blank"
                   )
                 }
@@ -93,7 +93,7 @@ export default function Download() {
                 className="w-full sm:w-auto h-14 px-8 bg-black hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-700 text-white rounded-2xl shadow-lg dark:shadow-black/50 transition-all duration-300 hover:shadow-xl dark:hover:shadow-black/70"
                 onClick={() =>
                   window.open(
-                    "https://apps.apple.com/app/taskdey/id123456789",
+                    "https://apps.apple.com/gh/app/taskdey/id6739984570",
                     "_blank"
                   )
                 }

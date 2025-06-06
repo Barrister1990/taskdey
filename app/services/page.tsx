@@ -392,7 +392,7 @@ const categoryServices = servicesByCategory[activeCategory as CategoryName] || [
                 className="bg-white text-indigo-600 hover:bg-gray-100 font-semibold px-8 py-4 rounded-xl shadow-lg"
                 asChild
               >
-                <Link href="https://apps.apple.com/app/taskdey" className="flex items-center gap-2">
+                <Link href="https://apps.apple.com/gh/app/taskdey/id6739984570" className="flex items-center gap-2">
                   <Download className="w-5 h-5" />
                   App Store
                 </Link>
@@ -402,7 +402,7 @@ const categoryServices = servicesByCategory[activeCategory as CategoryName] || [
                 className="bg-white text-indigo-600 hover:bg-gray-100 font-semibold px-8 py-4 rounded-xl shadow-lg"
                 asChild
               >
-                <Link href="https://play.google.com/store/apps/details?id=com.taskdey.app" className="flex items-center gap-2">
+                <Link href="https://play.google.com/store/apps/details?id=com.barrister1990.joymish&pcampaignid=web_share" className="flex items-center gap-2">
                   <Download className="w-5 h-5" />
                   Play Store
                 </Link>
