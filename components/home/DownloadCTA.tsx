@@ -2,6 +2,13 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Apple, CheckCircle, Play, Smartphone, Star, Users } from "lucide-react";
 
+
+type QRCodeProps = {
+  src: string;
+  alt?: string;
+  platform: string;
+};
+
 export default function DownloadCTA({ 
   appStoreQR = "/images/qrcode.png", 
   playStoreQR = "/images/qrcode.png",
@@ -43,8 +50,10 @@ export default function DownloadCTA({
   '/images/tvet.png',
 ];
 
+
+
   // QR Code component for actual images
-  const QRCode = ({ src, alt, platform }) => (
+  const QRCode = ({ src, alt, platform }: QRCodeProps) => (
     <div className="w-16 h-16 bg-white rounded-lg p-1 shadow-md">
       <img 
         src={src} 
@@ -196,15 +205,16 @@ export default function DownloadCTA({
                   />
                   <div className="flex-1">
                     <Button
-                      as="a"
-                      href={appStoreUrl}
+                      asChild
                       className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 h-14 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                     >
+                      <a href={appStoreUrl} target="_blank" rel="noopener noreferrer">
                       <Apple className="w-6 h-6 mr-3" />
                       <div className="text-left">
                         <div className="text-xs opacity-80">Download on the</div>
                         <div className="text-base font-bold">App Store</div>
                       </div>
+                      </a>
                     </Button>
                   </div>
                 </motion.div>
@@ -221,17 +231,18 @@ export default function DownloadCTA({
                     platform="Android" 
                   />
                   <div className="flex-1">
-                    <Button
-                      as="a"
-                      href={playStoreUrl}
-                      className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white border-0 h-14 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                    >
-                      <Play className="w-6 h-6 mr-3" />
-                      <div className="text-left">
-                        <div className="text-xs opacity-80">Get it on</div>
-                        <div className="text-base font-bold">Google Play</div>
-                      </div>
-                    </Button>
+                    <Button 
+  asChild
+  className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white border-0 h-14 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+>
+  <a href={playStoreUrl} target="_blank" rel="noopener noreferrer">
+    <Play className="w-6 h-6 mr-3" />
+    <div className="text-left">
+      <div className="text-xs opacity-80">Get it on</div>
+      <div className="text-base font-bold">Google Play</div>
+    </div>
+  </a>
+</Button>
                   </div>
                 </motion.div>
               </div>
