@@ -13,7 +13,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 interface Verification {
@@ -66,6 +66,20 @@ function formatDate(d: string | null) {
 }
 
 export default function VerificationsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-5 h-5 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <VerificationsContent />
+    </Suspense>
+  );
+}
+
+function VerificationsContent() {
   const searchParams = useSearchParams();
   const initialSearch = searchParams.get("search") || "";
 
