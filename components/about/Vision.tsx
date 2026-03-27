@@ -1,129 +1,127 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Lightbulb, Sparkles, Target } from "lucide-react";
+import { Lightbulb, Sparkles, Target } from "lucide-react";
+
+const cards = [
+  {
+    title: "Our Vision",
+    icon: Target,
+    color: "bg-primary",
+    description:
+      "To be Ghana's leading platform connecting skilled workers with clients, creating opportunities and fostering economic growth in our communities through innovative technology and trusted partnerships.",
+  },
+  {
+    title: "Our Mission",
+    icon: Lightbulb,
+    color: "bg-secondary",
+    description:
+      "To empower skilled workers and provide clients with reliable, on-demand access to quality vocational services through innovative technology, fostering trust and excellence in every interaction.",
+  },
+];
+
+const quickFacts = [
+  { value: "2024", label: "Founded" },
+  { value: "Ghana", label: "Based" },
+  { value: "∞", label: "Possibilities" },
+];
 
 export default function Vision() {
   return (
-    <section className="pt-16 pb-20 bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 relative overflow-hidden">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-20 -right-20 w-40 h-40 sm:w-60 sm:h-60 lg:-top-40 lg:-right-40 lg:w-80 lg:h-80 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-20 -left-20 w-40 h-40 sm:w-60 sm:h-60 lg:-bottom-40 lg:-left-40 lg:w-80 lg:h-80 bg-gradient-to-br from-blue-400/20 to-indigo-400/20 rounded-full blur-3xl"></div>
-      </div>
+    <section className="pt-12 sm:pt-16 pb-12 sm:pb-20 bg-background relative overflow-hidden">
+      {/* Decorative shapes */}
+      <div className="absolute top-10 right-12 w-14 h-14 rounded-full bg-tertiary/10 hidden lg:block" />
+      <div className="absolute bottom-16 left-8 w-8 h-8 rotate-45 bg-secondary/10 hidden lg:block" />
+      <motion.div
+        animate={{ y: [0, -10, 0] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-32 left-[20%] w-5 h-5 rounded-full bg-quaternary/15 hidden lg:block"
+      />
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center mb-12 sm:mb-16 lg:mb-20"
+          transition={{ duration: 0.7 }}
+          className="text-center mb-8 sm:mb-14"
         >
-          <div className="inline-flex items-center gap-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6">
-            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
+          <motion.span
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold border-2 border-primary/20 mb-3 sm:mb-4"
+          >
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" strokeWidth={2.5} />
             About Our Purpose
-          </div>
-          
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 dark:from-white dark:via-indigo-100 dark:to-white bg-clip-text text-transparent leading-tight px-2">
-            Vision & Mission
+          </motion.span>
+
+          <h1 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-extrabold text-foreground mb-2 sm:mb-4">
+            Vision <span className="text-primary">&</span> Mission
           </h1>
-          
-          <p className="text-slate-600 dark:text-slate-300 max-w-sm sm:max-w-2xl lg:max-w-3xl mx-auto text-sm sm:text-base lg:text-lg leading-relaxed px-4 sm:px-0">
-            Building the future of vocational services in Ghana through technology,
-            innovation, and unwavering trust in our community.
+
+          <p className="text-xs sm:text-base text-muted-foreground max-w-2xl mx-auto">
+            Building the future of vocational services in Ghana through
+            technology, innovation, and unwavering trust in our community.
           </p>
         </motion.div>
 
-        <div className="space-y-6 sm:space-y-8 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0 max-w-sm sm:max-w-2xl lg:max-w-6xl mx-auto">
-          {/* Vision Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="group relative"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl sm:rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500"></div>
-            
-            <div className="relative bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xl border border-white/20 dark:border-slate-700/50 group-hover:shadow-2xl transition-all duration-500 group-hover:-translate-y-1 sm:group-hover:-translate-y-2">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
-                  <Target className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
-                </div>
-                <div className="flex-1">
-                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white">Our Vision</h2>
-                  <div className="w-8 sm:w-12 h-0.5 sm:h-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full mt-1 sm:mt-2"></div>
-                </div>
-              </div>
-              
-              <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed mb-4 sm:mb-6">
-                To be Ghana&apos;s leading platform connecting skilled workers with clients,
-                creating opportunities and fostering economic growth in our communities
-                through innovative technology and trusted partnerships.
-              </p>
-              
-              <div className="flex items-center text-indigo-600 dark:text-indigo-400 font-medium group-hover:gap-3 gap-2 transition-all duration-300 text-sm sm:text-base">
-                <span>Learn more about our vision</span>
-                <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform duration-300 flex-shrink-0" />
-              </div>
-            </div>
-          </motion.div>
+        {/* Vision & Mission Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6 max-w-4xl mx-auto">
+          {cards.map((card, index) => {
+            const Icon = card.icon;
+            return (
+              <motion.div
+                key={card.title}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 + index * 0.15 }}
+                className="group"
+              >
+                <div className="bg-card border-2 border-border rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 shadow-hard-sm hover:shadow-hard transition-all duration-300 ease-bounce hover:-translate-y-1 h-full">
+                  <div className="flex items-center gap-2.5 sm:gap-3 mb-3 sm:mb-5">
+                    <div
+                      className={`w-9 h-9 sm:w-12 sm:h-12 ${card.color} rounded-xl sm:rounded-2xl flex items-center justify-center border-2 border-foreground shadow-hard-sm`}
+                    >
+                      <Icon className="w-4 h-4 sm:w-6 sm:h-6 text-white" strokeWidth={2.5} />
+                    </div>
+                    <h2 className="font-heading text-base sm:text-xl lg:text-2xl font-extrabold text-foreground">
+                      {card.title}
+                    </h2>
+                  </div>
 
-          {/* Mission Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="group relative"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl sm:rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500"></div>
-            
-            <div className="relative bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xl border border-white/20 dark:border-slate-700/50 group-hover:shadow-2xl transition-all duration-500 group-hover:-translate-y-1 sm:group-hover:-translate-y-2">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
-                  <Lightbulb className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                  <p className="text-[11px] sm:text-sm lg:text-base text-muted-foreground leading-relaxed">
+                    {card.description}
+                  </p>
                 </div>
-                <div className="flex-1">
-                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white">Our Mission</h2>
-                  <div className="w-8 sm:w-12 h-0.5 sm:h-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full mt-1 sm:mt-2"></div>
-                </div>
-              </div>
-              
-              <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed mb-4 sm:mb-6">
-                To empower skilled workers and provide clients with reliable,
-                on-demand access to quality vocational services through innovative
-                technology, fostering trust and excellence in every interaction.
-              </p>
-              
-              <div className="flex items-center text-indigo-600 dark:text-indigo-400 font-medium group-hover:gap-3 gap-2 transition-all duration-300 text-sm sm:text-base">
-                <span>Discover our mission</span>
-                <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform duration-300 flex-shrink-0" />
-              </div>
-            </div>
-          </motion.div>
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* Stats or additional info section */}
+        {/* Quick Facts */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="mt-12 sm:mt-16 lg:mt-20 text-center"
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="mt-8 sm:mt-14 flex justify-center"
         >
-          <div className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-8 bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl rounded-xl sm:rounded-2xl px-6 py-4 sm:px-8 sm:py-6 shadow-lg border border-white/20 dark:border-slate-700/50 max-w-sm sm:max-w-none mx-auto">
-            <div className="text-center">
-              <div className="text-xl sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400">2024</div>
-              <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">Founded</div>
-            </div>
-            <div className="w-full h-px sm:w-px sm:h-8 lg:h-10 bg-slate-200 dark:bg-slate-700"></div>
-            <div className="text-center">
-              <div className="text-xl sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400">Ghana</div>
-              <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">Based</div>
-            </div>
-            <div className="w-full h-px sm:w-px sm:h-8 lg:h-10 bg-slate-200 dark:bg-slate-700"></div>
-            <div className="text-center">
-              <div className="text-xl sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400">∞</div>
-              <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">Possibilities</div>
-            </div>
+          <div className="inline-flex items-center gap-3 sm:gap-5 bg-card border-2 border-border rounded-full px-4 py-2.5 sm:px-6 sm:py-3 shadow-hard-sm">
+            {quickFacts.map((fact, i) => (
+              <div key={fact.label} className="flex items-center gap-3 sm:gap-5">
+                {i > 0 && (
+                  <div className="w-px h-6 sm:h-8 bg-border" />
+                )}
+                <div className="text-center">
+                  <div className="font-heading text-sm sm:text-lg font-extrabold text-primary">
+                    {fact.value}
+                  </div>
+                  <div className="text-[9px] sm:text-xs text-muted-foreground font-medium">
+                    {fact.label}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </motion.div>
       </div>

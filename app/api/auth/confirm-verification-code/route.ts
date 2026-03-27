@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { authApiError, AuthApiErrorCode } from '@/lib/auth-api-errors';
+import { checkRateLimit, getClientIp, invalidatePendingCodes } from '@/lib/rate-limit';
+
+const WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+const MAX_ATTEMPTS_PER_EMAIL = 5;
+const MAX_ATTEMPTS_PER_IP = 15;
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -52,7 +57,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const ip = getClientIp(req);
+    const ipCheck = checkRateLimit(`confirm-code:ip:${ip}`, MAX_ATTEMPTS_PER_IP, WINDOW_MS);
+    if (!ipCheck.allowed) {
+      return authApiError(
+        AuthApiErrorCode.RATE_LIMITED,
+        `Too many attempts. Try again in ${ipCheck.retryAfterSeconds}s.`,
+        429
+      );
+    }
+
     const emailLower = email.trim().toLowerCase();
+
+    const emailCheck = checkRateLimit(`confirm-code:email:${emailLower}`, MAX_ATTEMPTS_PER_EMAIL, WINDOW_MS);
+    if (!emailCheck.allowed) {
+      await invalidatePendingCodes(supabaseAdmin, emailLower);
+      return authApiError(
+        AuthApiErrorCode.TOO_MANY_ATTEMPTS,
+        `Too many failed attempts. All pending codes have been invalidated. Please request a new code.`,
+        429
+      );
+    }
     const now = new Date().toISOString();
 
     const { data: rows, error: fetchError } = await supabaseAdmin

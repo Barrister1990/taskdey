@@ -6,16 +6,12 @@ import {
   Linkedin,
   Mail,
   MapPin,
-  Phone
+  Phone,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
-
-
-export default function Footer() {
-  const currentYear = new Date().getFullYear();
-
-const TikTokIcon = ({ className = 'w-5 h-5' }) => (
+const TikTokIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 256 256"
@@ -29,161 +25,182 @@ const TikTokIcon = ({ className = 'w-5 h-5' }) => (
     <path d="M168 32c0 26.51 21.49 48 48 48v40a88 88 0 1 1-88-88v48a40 40 0 1 0 40 40V32" />
   </svg>
 );
+
+const socials = [
+  {
+    href: "https://www.facebook.com/share/16Lta84UPv/?mibextid=wwXIfr",
+    label: "Facebook",
+    icon: Facebook,
+  },
+  {
+    href: "https://www.tiktok.com/@taskdey?_t=ZM-8vuk9ldkHR9&_r=1",
+    label: "TikTok",
+    icon: TikTokIcon,
+  },
+  {
+    href: "https://www.instagram.com/taskdey/profilecard/?igsh=aG5sMHE1MmZ5dXc4",
+    label: "Instagram",
+    icon: Instagram,
+  },
+  {
+    href: "https://www.linkedin.com/showcase/joymish/?viewAsMember=true",
+    label: "LinkedIn",
+    icon: Linkedin,
+  },
+];
+
+const legalLinks = [
+  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/terms", label: "Terms & Conditions" },
+  { href: "/cookies", label: "Cookies" },
+];
+
+const contactInfo = [
+  { icon: Mail, href: "mailto:info@taskdey.com", label: "info@taskdey.com" },
+  { icon: Phone, href: "tel:+233241940783", label: "+233 241 940 783" },
+  { icon: MapPin, href: null, label: "Accra, Ghana" },
+];
+
+export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white border-t border-slate-200 dark:border-slate-700">
-      <div className="container mx-auto px-4 py-6 md:py-16">
-        {/* Mobile Layout - Very Compact */}
-        <div className="block md:hidden">
-          {/* Company Name */}
+    <footer className="bg-card border-t-2 border-border relative overflow-hidden">
+      {/* Decorative shapes */}
+      <div className="absolute top-8 right-12 w-10 h-10 rounded-full bg-tertiary/8 hidden lg:block" />
+      <div className="absolute bottom-16 left-10 w-6 h-6 rotate-45 bg-secondary/8 hidden lg:block" />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* ===== Mobile Layout ===== */}
+        <div className="block md:hidden py-6">
+          {/* Logo */}
           <div className="text-center mb-4">
-            <h3 className="text-xl font-bold bg-gradient-to-r from-indigo-600 dark:from-indigo-400 to-purple-600 dark:to-purple-400 bg-clip-text text-transparent">
-              Taskdey
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <Image
+              src="/logo.png"
+              alt="Taskdey"
+              width={100}
+              height={30}
+              className="h-7 w-auto mx-auto"
+            />
+            <p className="text-[10px] text-muted-foreground mt-1">
               Ghana&apos;s premier service platform
             </p>
           </div>
 
-          {/* Compact Links Grid */}
-          <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs mb-4">
-            {NAV_LINKS.slice(0, 4).map((link) => (
+          {/* Compact Links */}
+          <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-[11px] mb-4 px-4">
+            {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                className="text-muted-foreground hover:text-primary transition-colors"
               >
                 {link.label}
               </Link>
             ))}
           </div>
 
-          {/* Contact - Single Line */}
-          <div className="text-center mb-4">
-            <a 
+          {/* Contact */}
+          <div className="text-center mb-3">
+            <a
               href="mailto:info@taskdey.com"
-              className="text-xs text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+              className="text-[11px] text-muted-foreground hover:text-primary transition-colors"
             >
               info@taskdey.com
             </a>
           </div>
 
-          {/* Social Icons - Smaller */}
-          <div className="flex justify-center space-x-3 mb-4">
-            <a
-              href="https://www.facebook.com/share/16Lta84UPv/?mibextid=wwXIfr"
-              className="w-7 h-7 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center hover:bg-indigo-600 dark:hover:bg-indigo-600 transition-all duration-200"
-              aria-label="Facebook"
-            >
-              <Facebook className="w-3 h-3 text-slate-600 dark:text-slate-300" />
-            </a>
-            <a
-              href="https://www.tiktok.com/@taskdey?_t=ZM-8vuk9ldkHR9&_r=1"
-              className="w-7 h-7 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center hover:bg-indigo-600 dark:hover:bg-indigo-600 transition-all duration-200"
-              aria-label="Tick Tock"
-            >
-              <TikTokIcon className="w-3 h-3 text-slate-600 dark:text-slate-300" />
-            </a>
-            <a
-              href="https://www.instagram.com/taskdey/profilecard/?igsh=aG5sMHE1MmZ5dXc4"
-              className="w-7 h-7 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center hover:bg-indigo-600 dark:hover:bg-indigo-600 transition-all duration-200"
-              aria-label="Instagram"
-            >
-              <Instagram className="w-3 h-3 text-slate-600 dark:text-slate-300" />
-            </a>
-            <a
-              href="https://www.linkedin.com/showcase/joymish/?viewAsMember=true"
-              className="w-7 h-7 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center hover:bg-indigo-600 dark:hover:bg-indigo-600 transition-all duration-200"
-              aria-label="LinkedIn"
-            >
-              <Linkedin className="w-3 h-3 text-slate-600 dark:text-slate-300" />
-            </a>
+          {/* Social Icons */}
+          <div className="flex justify-center gap-2 mb-3">
+            {socials.map(({ href, label, icon: Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-7 h-7 bg-muted border border-border rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-foreground transition-all duration-200"
+                aria-label={label}
+              >
+                <Icon className="w-3 h-3" />
+              </a>
+            ))}
           </div>
 
-          {/* Legal Links - Horizontal */}
-          <div className="flex justify-center space-x-4 text-xs mb-3">
-            <Link
-              href="/privacy"
-              className="text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-            >
-              Privacy
-            </Link>
-            <Link
-              href="/terms"
-              className="text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-            >
-              Terms
-            </Link>
-            
+          {/* Legal */}
+          <div className="flex justify-center gap-3 text-[10px] mb-2">
+            {legalLinks.slice(0, 2).map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                {link.label.split(" ")[0]}
+              </Link>
+            ))}
           </div>
 
           {/* Copyright */}
-          <p className="text-center text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-center text-[10px] text-muted-foreground">
             &copy; {currentYear} Taskdey
           </p>
         </div>
 
-        {/* Desktop Layout - Full Version */}
-        <div className="hidden md:block">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        {/* ===== Desktop Layout ===== */}
+        <div className="hidden md:block py-12">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
             {/* Company Info */}
-            <div className="lg:col-span-1 space-y-6">
+            <div className="space-y-5">
               <div>
-                <h3 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 dark:from-indigo-400 to-purple-600 dark:to-purple-400 bg-clip-text text-transparent">
-                  Taskdey
-                </h3>
-                <p className="text-slate-600 dark:text-slate-300 mt-4 leading-relaxed">
-                  Ghana&apos;s premier platform connecting skilled professionals with clients. 
-                  Building trust through quality service delivery.
+                <div className="mb-3">
+                  <Image
+                    src="/logo.png"
+                    alt="Taskdey"
+                    width={130}
+                    height={40}
+                    className="h-9 w-auto"
+                  />
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Ghana&apos;s premier platform connecting skilled professionals
+                  with clients. Building trust through quality service delivery.
                 </p>
               </div>
-              
+
               {/* Social Links */}
               <div>
-                <h4 className="font-semibold text-lg mb-4 text-slate-900 dark:text-white">Connect With Us</h4>
-                <div className="flex space-x-4">
-                  <a
-                    href="https://www.facebook.com/share/16Lta84UPv/?mibextid=wwXIfr"
-                    className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center hover:bg-indigo-600 dark:hover:bg-indigo-600 transition-all duration-300 group"
-                    aria-label="Facebook"
-                  >
-                    <Facebook className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-white" />
-                  </a>
-                  <a
-                    href="https://www.tiktok.com/@taskdey?_t=ZM-8vuk9ldkHR9&_r=1"
-                    className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center hover:bg-indigo-600 dark:hover:bg-indigo-600 transition-all duration-300 group"
-                    aria-label="Twitter"
-                  >
-                    <TikTokIcon className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-white" />
-                  </a>
-                  <a
-                    href="https://www.instagram.com/taskdey/profilecard/?igsh=aG5sMHE1MmZ5dXc4"
-                    className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center hover:bg-indigo-600 dark:hover:bg-indigo-600 transition-all duration-300 group"
-                    aria-label="Instagram"
-                  >
-                    <Instagram className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-white" />
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/showcase/joymish/?viewAsMember=true"
-                    className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center hover:bg-indigo-600 dark:hover:bg-indigo-600 transition-all duration-300 group"
-                    aria-label="LinkedIn"
-                  >
-                    <Linkedin className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-white" />
-                  </a>
+                <h4 className="font-heading font-bold text-sm text-foreground mb-3">
+                  Connect With Us
+                </h4>
+                <div className="flex gap-2">
+                  {socials.map(({ href, label, icon: Icon }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group w-9 h-9 bg-muted border-2 border-border rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-foreground hover:shadow-hard-sm transition-all duration-300 ease-bounce hover:-translate-y-0.5"
+                      aria-label={label}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>
 
             {/* Quick Links */}
-            <div className="space-y-6">
-              <h4 className="font-semibold text-lg text-slate-900 dark:text-white">Quick Links</h4>
-              <ul className="space-y-3">
+            <div>
+              <h4 className="font-heading font-bold text-sm text-foreground mb-4">
+                Quick Links
+              </h4>
+              <ul className="space-y-2.5">
                 {NAV_LINKS.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300 flex items-center group"
+                      className="group text-sm text-muted-foreground hover:text-primary transition-colors flex items-center"
                     >
-                      <span className="w-1 h-1 bg-indigo-600 dark:bg-indigo-400 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                      <span className="w-1 h-1 bg-primary rounded-full mr-2.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                       {link.label}
                     </Link>
                   </li>
@@ -191,105 +208,87 @@ const TikTokIcon = ({ className = 'w-5 h-5' }) => (
               </ul>
             </div>
 
-            {/* Contact Info */}
-            <div className="space-y-6">
-              <h4 className="font-semibold text-lg text-slate-900 dark:text-white">Get In Touch</h4>
-              <ul className="space-y-4">
-                <li className="flex items-start space-x-3">
-                  <Mail className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5 flex-shrink-0" />
-                  <a 
-                    href="mailto:info@taskdey.com"
-                    className="text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
-                  >
-                    info@taskdey.com
-                  </a>
-                </li>
-                <li className="flex items-start space-x-3">
-                  <Phone className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5 flex-shrink-0" />
-                  <a 
-                    href="tel:+233123456789"
-                    className="text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
-                  >
-                    +233 241 940 783
-                  </a>
-                </li>
-                <li className="flex items-start space-x-3">
-                  <MapPin className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5 flex-shrink-0" />
-                  <span className="text-slate-600 dark:text-slate-300">
-                    Accra, Ghana
-                  </span>
-                </li>
+            {/* Contact */}
+            <div>
+              <h4 className="font-heading font-bold text-sm text-foreground mb-4">
+                Get In Touch
+              </h4>
+              <ul className="space-y-3">
+                {contactInfo.map(({ icon: Icon, href, label }) => (
+                  <li key={label} className="flex items-start gap-2.5">
+                    <span className="flex items-center justify-center w-7 h-7 bg-primary/10 rounded-lg flex-shrink-0 mt-0.5">
+                      <Icon className="w-3.5 h-3.5 text-primary" strokeWidth={2.5} />
+                    </span>
+                    {href ? (
+                      <a
+                        href={href}
+                        className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {label}
+                      </a>
+                    ) : (
+                      <span className="text-sm text-muted-foreground">
+                        {label}
+                      </span>
+                    )}
+                  </li>
+                ))}
               </ul>
             </div>
 
             {/* Legal & Developer */}
-            <div className="space-y-6">
-              <h4 className="font-semibold text-lg text-slate-900 dark:text-white">Legal & Support</h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link
-                    href="/privacy"
-                    className="text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300 flex items-center group"
-                  >
-                    <span className="w-1 h-1 bg-indigo-600 dark:bg-indigo-400 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/terms"
-                    className="text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300 flex items-center group"
-                  >
-                    <span className="w-1 h-1 bg-indigo-600 dark:bg-indigo-400 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                    Terms & Conditions
-                  </Link>
-                </li>
-                <li>
-                  
-                </li>
+            <div>
+              <h4 className="font-heading font-bold text-sm text-foreground mb-4">
+                Legal & Support
+              </h4>
+              <ul className="space-y-2.5">
+                {legalLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="group text-sm text-muted-foreground hover:text-primary transition-colors flex items-center"
+                    >
+                      <span className="w-1 h-1 bg-primary rounded-full mr-2.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
 
               {/* Developer Credit */}
-              <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
-                <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">Developed by</p>
+              <div className="pt-4 mt-4 border-t-2 border-border">
+                <p className="text-xs text-muted-foreground mb-1.5">
+                  Developed by
+                </p>
                 <a
                   href="https://charlesawuku.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center space-x-2 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300 group"
+                  className="group inline-flex items-center gap-1.5 text-sm font-semibold text-foreground hover:text-primary transition-colors"
                 >
-                  <span className="font-medium">Charles Awuku</span>
-                  <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-300" />
+                  <span>Charles Awuku</span>
+                  <ExternalLink className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </a>
               </div>
             </div>
           </div>
 
           {/* Bottom Bar */}
-          <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
-            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-              <p className="text-slate-500 dark:text-slate-400 text-sm">
+          <div className="mt-10 pt-6 border-t-2 border-border">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-3">
+              <p className="text-xs text-muted-foreground">
                 &copy; {currentYear} Taskdey. All rights reserved.
               </p>
-              <div className="flex space-x-6 text-sm">
-                <Link
-                  href="/privacy"
-                  className="text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
-                >
-                  Privacy
-                </Link>
-                <Link
-                  href="/terms"
-                  className="text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
-                >
-                  Terms
-                </Link>
-                <Link
-                  href="/cookies"
-                  className="text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
-                >
-                  Cookies
-                </Link>
+              <div className="flex gap-5 text-xs">
+                {legalLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {link.label.split(" ")[0]}
+                  </Link>
+                ))}
               </div>
             </div>
           </div>

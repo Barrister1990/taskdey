@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
 import { Menu } from "lucide-react";
 import { NAV_LINKS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ export default function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
+      setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -26,38 +26,55 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-background/80 backdrop-blur-md shadow-md" : ""
+        isScrolled
+          ? "bg-background/90 backdrop-blur-md border-b-2 border-border shadow-hard-sm"
+          : ""
       }`}
     >
-      <div className="container mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="text-2xl font-bold text-indigo-600">Taskdey</span>
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 group">
+            <Image
+              src="/logo.png"
+              alt="Taskdey"
+              width={120}
+              height={36}
+              className="h-8 sm:h-9 w-auto transition-transform duration-300 ease-bounce group-hover:-translate-y-0.5"
+              priority
+            />
           </Link>
 
-          <nav className="hidden md:flex items-center space-x-8">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-sm font-medium transition-colors hover:text-indigo-600 ${
-                  pathname === link.href ? "text-indigo-600" : "text-foreground"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-1">
+            {NAV_LINKS.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`relative px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 ease-bounce ${
+                    isActive
+                      ? "bg-primary text-primary-foreground border-2 border-foreground shadow-hard-sm"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </nav>
 
-          <div className="flex items-center space-x-4">
+          {/* Right side */}
+          <div className="flex items-center gap-3">
             <ThemeToggle />
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
-              className="md:hidden"
+              className="md:hidden border-2 border-border hover:bg-muted"
               onClick={() => setIsMobileMenuOpen(true)}
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="h-5 w-5" strokeWidth={2.5} />
             </Button>
           </div>
         </div>

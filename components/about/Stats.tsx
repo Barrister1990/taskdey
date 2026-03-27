@@ -1,118 +1,111 @@
 "use client";
+
 import { STATS } from "@/lib/constants";
 import { motion } from "framer-motion";
 
+const accentColors = [
+  "bg-primary",
+  "bg-secondary",
+  "bg-tertiary",
+  "bg-quaternary",
+];
+
 export default function Stats() {
   return (
-    <section className="py-16 px-4 bg-gradient-to-br from-slate-50 to-white dark:from-gray-900 dark:to-gray-800">
-      <div className="max-w-6xl mx-auto">
+    <section className="py-12 sm:py-20 bg-muted/50 relative overflow-hidden">
+      {/* Decorative shapes */}
+      <div className="absolute top-8 left-10 w-10 h-10 rounded-full bg-tertiary/10 hidden lg:block" />
+      <div className="absolute bottom-12 right-8 w-6 h-6 rotate-12 bg-secondary/10 hidden lg:block" />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Our Impact in Numbers
+          <motion.span
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-block bg-primary/10 text-primary px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold border-2 border-primary/20 mb-3 sm:mb-4"
+          >
+            Our Impact
+          </motion.span>
+
+          <h2 className="font-heading text-xl sm:text-3xl lg:text-4xl font-extrabold text-foreground">
+            Our Impact in <span className="text-primary">Numbers</span>
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto rounded-full"></div>
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-          {STATS.map((stat, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ 
-                duration: 0.6, 
-                delay: index * 0.1,
-                ease: "easeOut"
-              }}
-              whileHover={{ 
-                y: -8,
-                transition: { duration: 0.3 }
-              }}
-              className="group relative"
-            >
-              {/* Card */}
-              <div className="relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden">
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                
-                {/* Animated Border */}
-                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 p-[1px]">
-                    <div className="w-full h-full rounded-2xl bg-white dark:bg-gray-800"></div>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="relative z-10 text-center">
-                  {/* Icon/Decoration */}
-                  <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-6 h-6 bg-white rounded-md opacity-90"></div>
-                  </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-5 lg:gap-6">
+          {STATS.map((stat, index) => {
+            const color = accentColors[index % accentColors.length];
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.08 }}
+                className="group"
+              >
+                <div className="bg-card border-2 border-border rounded-xl sm:rounded-2xl p-3 sm:p-6 shadow-hard-sm hover:shadow-hard transition-all duration-300 ease-bounce hover:-translate-y-1 text-center h-full">
+                  {/* Accent dot */}
+                  <div
+                    className={`w-3 h-3 sm:w-4 sm:h-4 ${color} rounded-full mx-auto mb-2 sm:mb-4 border-2 border-foreground shadow-hard-sm`}
+                  />
 
                   {/* Value */}
                   <motion.div
                     initial={{ scale: 0.5 }}
                     whileInView={{ scale: 1 }}
                     viewport={{ once: true }}
-                    transition={{ 
-                      duration: 0.8, 
+                    transition={{
+                      duration: 0.6,
                       delay: index * 0.1 + 0.2,
                       type: "spring",
-                      stiffness: 100
+                      stiffness: 200,
                     }}
-                    className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3"
+                    className="font-heading text-xl sm:text-3xl lg:text-4xl font-extrabold text-primary mb-0.5 sm:mb-2"
                   >
                     {stat.value}
                   </motion.div>
 
                   {/* Label */}
-                  <p className="text-gray-600 dark:text-gray-300 font-medium text-sm md:text-base leading-relaxed">
+                  <p className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground font-medium">
                     {stat.label}
                   </p>
-
-                  {/* Pulse Effect */}
-                  <div className="absolute top-4 right-4 w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full opacity-0 group-hover:opacity-100 animate-pulse"></div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* Bottom Decoration */}
+        {/* Decorative dots */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="flex justify-center mt-16"
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="flex justify-center mt-8 sm:mt-12 gap-2"
         >
-          <div className="flex space-x-2">
-            {[...Array(3)].map((_, i) => (
-              <motion.div
-                key={i}
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.5, 1, 0.5]
-                }}
-                transition={{
-                  duration: 2,
-                  delay: i * 0.2,
-                  repeat: Infinity,
-                  repeatType: "reverse"
-                }}
-                className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
-              ></motion.div>
-            ))}
-          </div>
+          {accentColors.map((color, i) => (
+            <motion.div
+              key={i}
+              animate={{ scale: [1, 1.3, 1] }}
+              transition={{
+                duration: 2,
+                delay: i * 0.2,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+              className={`w-1.5 h-1.5 sm:w-2 sm:h-2 ${color} rounded-full`}
+            />
+          ))}
         </motion.div>
       </div>
     </section>

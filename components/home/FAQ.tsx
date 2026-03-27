@@ -6,8 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Briefcase,
   Clock,
@@ -18,303 +17,307 @@ import {
   Phone,
   Shield,
   Star,
-  Users
+  Users,
 } from "lucide-react";
 import { useState } from "react";
+import type { LucideIcon } from "lucide-react";
 
-// Enhanced FAQ Categories with more comprehensive information
-const FAQ_CATEGORIES = {
+const accentColors = [
+  "bg-primary",
+  "bg-secondary",
+  "bg-tertiary",
+  "bg-quaternary",
+  "bg-primary",
+  "bg-secondary",
+  "bg-tertiary",
+  "bg-quaternary",
+];
+
+interface FaqItem {
+  question: string;
+  answer: string;
+  icon: LucideIcon;
+}
+
+const FAQ_CATEGORIES: Record<string, FaqItem[]> = {
   clients: [
     {
-      question: 'How do I book a service on Taskdey?',
-      answer: 'Download the Taskdey app from Google Play Store or Apple App Store. Create your account, browse available workers in your area, view their profiles and ratings, then send a request directly. Once accepted, coordinate the details and schedule directly with your chosen worker.',
-      icon: Users
+      question: "How do I book a service on Taskdey?",
+      answer:
+        "Download the Taskdey app from Google Play Store or Apple App Store. Create your account, browse available workers in your area, view their profiles and ratings, then send a request directly. Once accepted, coordinate the details and schedule directly with your chosen worker.",
+      icon: Users,
     },
     {
-      question: 'Are all workers on Taskdey verified and trustworthy?',
-      answer: 'Yes, every worker undergoes comprehensive background checks, identity verification, and skill assessment before joining our platform. We also maintain a rating system where clients can review workers after each job, ensuring quality and accountability.',
-      icon: Shield
+      question: "Are all workers on Taskdey verified and trustworthy?",
+      answer:
+        "Yes, every worker undergoes comprehensive background checks, identity verification, and skill assessment before joining our platform. We also maintain a rating system where clients can review workers after each job, ensuring quality and accountability.",
+      icon: Shield,
     },
     {
-      question: 'How do payments work on Taskdey?',
-      answer: 'Taskdey does not process payments directly. Payment methods and amounts are agreed upon between you and the worker. Common payment options include Mobile Money (MTN, Vodafone, AirtelTigo), cash, or bank transfers. This gives you flexibility to choose what works best for both parties.',
-      icon: CreditCard
+      question: "How do payments work on Taskdey?",
+      answer:
+        "Taskdey does not process payments directly. Payment methods and amounts are agreed upon between you and the worker. Common payment options include Mobile Money (MTN, Vodafone, AirtelTigo), cash, or bank transfers.",
+      icon: CreditCard,
     },
     {
-      question: 'What types of services are available?',
-      answer: 'Taskdey offers a wide range of home services including plumbing, electrical work, cleaning, carpentry, painting, appliance repair, gardening, and many more. Our workers are skilled professionals across various trades and domestic services.',
-      icon: Briefcase
+      question: "What types of services are available?",
+      answer:
+        "Taskdey offers a wide range of home services including plumbing, electrical work, cleaning, carpentry, painting, appliance repair, gardening, and many more.",
+      icon: Briefcase,
     },
     {
-      question: 'How do I find workers in my area?',
-      answer: 'Our GPS-powered location system automatically shows you available workers near your location. You can filter by service type, ratings, availability, and distance to find the perfect match for your needs.',
-      icon: MapPin
+      question: "How do I find workers in my area?",
+      answer:
+        "Our GPS-powered location system automatically shows you available workers near your location. You can filter by service type, ratings, availability, and distance to find the perfect match.",
+      icon: MapPin,
     },
     {
-      question: 'What if I\'m not satisfied with the work?',
-      answer: 'We take quality seriously. You can rate and review workers after each job. If you encounter issues, contact our support team immediately. We work with both parties to resolve disputes and maintain high service standards.',
-      icon: Star
+      question: "What if I'm not satisfied with the work?",
+      answer:
+        "We take quality seriously. You can rate and review workers after each job. If you encounter issues, contact our support team immediately. We work with both parties to resolve disputes.",
+      icon: Star,
     },
     {
-      question: 'Is there customer support available?',
-      answer: 'Yes! Our customer support team is available 24/7 to help with any questions or issues. You can reach us through the app\'s live chat, phone, or email. We\'re committed to ensuring your experience is smooth and satisfactory.',
-      icon: Phone
+      question: "Is there customer support available?",
+      answer:
+        "Yes! Our customer support team is available 24/7 to help with any questions or issues. You can reach us through the app's live chat, phone, or email.",
+      icon: Phone,
     },
     {
-      question: 'How far in advance should I book a service?',
-      answer: 'Many workers are available for same-day or next-day services. However, for specialized services or during peak times, we recommend booking 2-3 days in advance to ensure availability and proper scheduling.',
-      icon: Clock
-    }
+      question: "How far in advance should I book a service?",
+      answer:
+        "Many workers are available for same-day or next-day services. However, for specialized services or during peak times, we recommend booking 2-3 days in advance.",
+      icon: Clock,
+    },
   ],
   workers: [
     {
-      question: 'How do I join Taskdey as a service provider?',
-      answer: 'Download the Taskdey app, complete your detailed profile with photos and service descriptions, verify your identity and skills through our verification process, and start receiving job requests from clients in your area.',
-      icon: Briefcase
+      question: "How do I join Taskdey as a service provider?",
+      answer:
+        "Download the Taskdey app, complete your detailed profile with photos and service descriptions, verify your identity and skills through our verification process, and start receiving job requests.",
+      icon: Briefcase,
     },
     {
-      question: 'How much can I realistically earn on Taskdey?',
-      answer: 'Earnings vary based on your skills, experience, and availability. Many active workers earn ₵2,000-8,000 monthly working flexible hours. Specialized skills like plumbing or electrical work typically command higher rates than general services.',
-      icon: CreditCard
+      question: "How much can I realistically earn on Taskdey?",
+      answer:
+        "Earnings vary based on your skills, experience, and availability. Many active workers earn GH₵2,000-8,000 monthly working flexible hours. Specialized skills typically command higher rates.",
+      icon: CreditCard,
     },
     {
-      question: 'How do I receive payments from clients?',
-      answer: 'Since Taskdey doesn\'t process payments, you negotiate payment terms directly with clients. Most workers accept Mobile Money (MTN, Vodafone, AirtelTigo), cash, or bank transfers. Payment is typically made upon job completion or as agreed with the client.',
-      icon: CreditCard
+      question: "How do I receive payments from clients?",
+      answer:
+        "Since Taskdey doesn't process payments, you negotiate payment terms directly with clients. Most workers accept Mobile Money (MTN, Vodafone, AirtelTigo), cash, or bank transfers.",
+      icon: CreditCard,
     },
     {
-      question: 'What is the verification process like?',
-      answer: 'Our verification includes identity confirmation, skills assessment, background checks, and reference verification. This process typically takes 2-3 business days and ensures client trust while maintaining platform quality.',
-      icon: Shield
+      question: "What is the verification process like?",
+      answer:
+        "Our verification includes identity confirmation, skills assessment, background checks, and reference verification. This process typically takes 2-3 business days.",
+      icon: Shield,
     },
     {
-      question: 'How do I get more job requests?',
-      answer: 'Maintain a complete profile with clear photos, competitive pricing, prompt responses to requests, and excellent service quality. Higher ratings and positive reviews significantly increase your visibility and job opportunities.',
-      icon: Star
+      question: "How do I get more job requests?",
+      answer:
+        "Maintain a complete profile with clear photos, competitive pricing, prompt responses to requests, and excellent service quality. Higher ratings significantly increase your visibility.",
+      icon: Star,
     },
     {
-      question: 'Can I set my own rates and working hours?',
-      answer: 'Absolutely! You have complete control over your pricing and availability. Set your rates based on your skills and market demand, and choose when you want to work. Taskdey gives you the flexibility to run your business your way.',
-      icon: Clock
+      question: "Can I set my own rates and working hours?",
+      answer:
+        "Absolutely! You have complete control over your pricing and availability. Set your rates based on your skills and market demand, and choose when you want to work.",
+      icon: Clock,
     },
     {
-      question: 'What happens if there\'s a dispute with a client?',
-      answer: 'Our support team mediates disputes fairly. We encourage clear communication and documentation of work. Both parties can contact support, and we work to resolve issues while maintaining platform integrity and user satisfaction.',
-      icon: MessageCircle
+      question: "What happens if there's a dispute with a client?",
+      answer:
+        "Our support team mediates disputes fairly. We encourage clear communication and documentation of work. Both parties can contact support for resolution.",
+      icon: MessageCircle,
     },
     {
-      question: 'Is there support for workers on the platform?',
-      answer: 'Yes! We provide 24/7 support, business tips, and resources to help you succeed. Our team is available via app chat, phone, or email to assist with technical issues, disputes, or general questions about maximizing your earning potential.',
-      icon: Phone
-    }
+      question: "Is there support for workers on the platform?",
+      answer:
+        "Yes! We provide 24/7 support, business tips, and resources to help you succeed. Our team is available via app chat, phone, or email.",
+      icon: Phone,
+    },
   ],
 };
+
+function FaqList({ items, tabKey }: { items: FaqItem[]; tabKey: string }) {
+  return (
+    <Accordion type="single" collapsible className="space-y-2 sm:space-y-3">
+      {items.map((faq, index) => {
+        const IconComponent = faq.icon;
+        const color = accentColors[index % accentColors.length];
+        return (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: index * 0.05 }}
+          >
+            <AccordionItem
+              value={`${tabKey}-${index}`}
+              className="bg-card border-2 border-border rounded-xl sm:rounded-2xl shadow-hard-sm hover:shadow-hard transition-all duration-300 ease-bounce px-3 sm:px-5 py-0.5 sm:py-1 data-[state=open]:shadow-hard"
+            >
+              <AccordionTrigger className="text-left hover:no-underline group py-2.5 sm:py-4">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div
+                    className={`flex-shrink-0 w-7 h-7 sm:w-10 sm:h-10 ${color} rounded-lg sm:rounded-xl flex items-center justify-center border-2 border-foreground shadow-hard-sm`}
+                  >
+                    <IconComponent className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-white" strokeWidth={2.5} />
+                  </div>
+                  <span className="text-[11px] sm:text-sm lg:text-base font-bold text-foreground group-hover:text-primary transition-colors">
+                    {faq.question}
+                  </span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground leading-relaxed pb-2.5 sm:pb-4 ml-9 sm:ml-13">
+                {faq.answer}
+              </AccordionContent>
+            </AccordionItem>
+          </motion.div>
+        );
+      })}
+    </Accordion>
+  );
+}
 
 export default function FAQ() {
   const [activeTab, setActiveTab] = useState("clients");
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 right-10 w-32 h-32 bg-gradient-to-br from-indigo-200/20 to-purple-200/20 dark:from-indigo-400/10 dark:to-purple-400/10 rounded-full blur-2xl" />
-        <div className="absolute bottom-1/3 left-10 w-40 h-40 bg-gradient-to-br from-blue-200/20 to-cyan-200/20 dark:from-blue-400/10 dark:to-cyan-400/10 rounded-full blur-2xl" />
-      </div>
+    <section className="py-12 sm:py-20 lg:py-24 bg-muted/50 relative overflow-hidden">
+      {/* Decorative shapes */}
+      <div className="absolute top-16 right-10 w-10 h-10 rounded-full bg-tertiary/10 hidden lg:block" />
+      <div className="absolute bottom-24 left-8 w-6 h-6 rotate-45 bg-secondary/10 hidden lg:block" />
+      <motion.div
+        animate={{ y: [0, -8, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-40 left-[15%] w-4 h-4 rounded-full bg-quaternary/15 hidden lg:block"
+      />
 
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12 sm:mb-16"
+          className="text-center mb-8 sm:mb-12"
         >
-          <motion.div
+          <motion.span
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="inline-flex items-center gap-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 px-4 py-2 rounded-full text-sm font-medium mb-6"
+            className="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold border-2 border-primary/20 mb-3 sm:mb-4"
           >
-            <HelpCircle className="w-4 h-4" />
+            <HelpCircle className="w-3 h-3 sm:w-4 sm:h-4" strokeWidth={2.5} />
             <span>FAQ</span>
-          </motion.div>
-          
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 sm:mb-6 text-slate-900 dark:text-white">
-            <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-800 dark:from-indigo-400 dark:via-purple-400 dark:to-indigo-300 bg-clip-text text-transparent">
-              Frequently Asked
-            </span>
+          </motion.span>
+
+          <h2 className="font-heading text-xl sm:text-3xl lg:text-4xl font-extrabold text-foreground mb-2 sm:mb-4">
+            <span className="text-primary">Frequently Asked</span>
             <br />
             <span>Questions</span>
           </h2>
-          <p className="text-base sm:text-lg lg:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed">
-            Find answers to common questions about using Taskdey as a client or service provider. Get the information you need to get started.
+          <p className="text-xs sm:text-base text-muted-foreground max-w-2xl mx-auto">
+            Find answers to common questions about using Taskdey as a client or
+            service provider.
           </p>
         </motion.div>
 
-        {/* FAQ Content */}
+        {/* Tab Switcher */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="max-w-4xl mx-auto"
+          className="flex justify-center mb-6 sm:mb-10"
         >
-          <Tabs defaultValue="clients" className="w-full" onValueChange={setActiveTab}>
-            {/* Enhanced Tab Navigation */}
-            <div className="flex justify-center mb-8 sm:mb-12">
-              <TabsList className="grid w-full max-w-md grid-cols-2 h-12 sm:h-14 bg-slate-100 dark:bg-slate-800 rounded-2xl p-1 border border-slate-200 dark:border-slate-700">
-                <TabsTrigger 
-                  value="clients" 
-                  className="flex items-center gap-2 rounded-xl text-sm sm:text-base font-medium transition-all duration-300 data-[state=active]:bg-white data-[state=active]:dark:bg-slate-700 data-[state=active]:shadow-md data-[state=active]:text-indigo-600 data-[state=active]:dark:text-indigo-400"
-                >
-                  <Users className="w-4 h-4" />
-                  <span className="hidden sm:inline">For Clients</span>
-                  <span className="sm:hidden">Clients</span>
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="workers" 
-                  className="flex items-center gap-2 rounded-xl text-sm sm:text-base font-medium transition-all duration-300 data-[state=active]:bg-white data-[state=active]:dark:bg-slate-700 data-[state=active]:shadow-md data-[state=active]:text-indigo-600 data-[state=active]:dark:text-indigo-400"
-                >
-                  <Briefcase className="w-4 h-4" />
-                  <span className="hidden sm:inline">For Workers</span>
-                  <span className="sm:hidden">Workers</span>
-                </TabsTrigger>
-              </TabsList>
-            </div>
-
-            {/* Clients FAQ */}
-            <TabsContent value="clients">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Accordion type="single" collapsible className="space-y-4">
-                  {FAQ_CATEGORIES.clients.map((faq, index) => {
-                    const IconComponent = faq.icon;
-                    return (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: index * 0.1 }}
-                      >
-                        <AccordionItem 
-                          value={`client-${index}`}
-                          className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-300 px-6 py-2"
-                        >
-                          <AccordionTrigger className="text-left hover:no-underline group py-4 sm:py-6">
-                            <div className="flex items-center gap-3 sm:gap-4">
-                              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                              </div>
-                              <span className="text-sm sm:text-base lg:text-lg font-semibold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">
-                                {faq.question}
-                              </span>
-                            </div>
-                          </AccordionTrigger>
-                          <AccordionContent className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed pb-4 sm:pb-6 ml-14 sm:ml-16">
-                            {faq.answer}
-                          </AccordionContent>
-                        </AccordionItem>
-                      </motion.div>
-                    );
-                  })}
-                </Accordion>
-              </motion.div>
-            </TabsContent>
-
-            {/* Workers FAQ */}
-            <TabsContent value="workers">
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Accordion type="single" collapsible className="space-y-4">
-                  {FAQ_CATEGORIES.workers.map((faq, index) => {
-                    const IconComponent = faq.icon;
-                    return (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: index * 0.1 }}
-                      >
-                        <AccordionItem 
-                          value={`worker-${index}`}
-                          className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-300 px-6 py-2"
-                        >
-                          <AccordionTrigger className="text-left hover:no-underline group py-4 sm:py-6">
-                            <div className="flex items-center gap-3 sm:gap-4">
-                              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                              </div>
-                              <span className="text-sm sm:text-base lg:text-lg font-semibold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">
-                                {faq.question}
-                              </span>
-                            </div>
-                          </AccordionTrigger>
-                          <AccordionContent className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed pb-4 sm:pb-6 ml-14 sm:ml-16">
-                            {faq.answer}
-                          </AccordionContent>
-                        </AccordionItem>
-                      </motion.div>
-                    );
-                  })}
-                </Accordion>
-              </motion.div>
-            </TabsContent>
-          </Tabs>
+          <div className="inline-flex bg-card border-2 border-border rounded-full p-1 shadow-hard-sm">
+            <button
+              onClick={() => setActiveTab("clients")}
+              className={`relative px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-semibold text-xs sm:text-sm transition-all duration-300 ease-bounce flex items-center gap-1.5 sm:gap-2 ${
+                activeTab === "clients"
+                  ? "bg-primary text-primary-foreground border-2 border-foreground shadow-hard-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={2.5} />
+              <span>For Clients</span>
+            </button>
+            <button
+              onClick={() => setActiveTab("workers")}
+              className={`relative px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-semibold text-xs sm:text-sm transition-all duration-300 ease-bounce flex items-center gap-1.5 sm:gap-2 ${
+                activeTab === "workers"
+                  ? "bg-primary text-primary-foreground border-2 border-foreground shadow-hard-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={2.5} />
+              <span>For Workers</span>
+            </button>
+          </div>
         </motion.div>
+
+        {/* FAQ Content */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.3 }}
+          >
+            <FaqList
+              items={FAQ_CATEGORIES[activeTab]}
+              tabKey={activeTab}
+            />
+          </motion.div>
+        </AnimatePresence>
 
         {/* Bottom CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mt-12 sm:mt-16 lg:mt-20"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="text-center mt-10 sm:mt-16"
         >
-          <div className="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-800 dark:from-indigo-500 dark:via-purple-500 dark:to-indigo-700 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12 text-white overflow-hidden max-w-2xl mx-auto">
-            {/* Background pattern */}
-            <div 
-              className="absolute inset-0 opacity-20"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-              }}
-            />
-            
+          <div className="relative bg-primary border-2 border-foreground rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-primary-foreground shadow-hard overflow-hidden max-w-2xl mx-auto">
+            {/* Decorative shapes */}
+            <div className="absolute top-3 right-4 w-6 h-6 rounded-full bg-white/10 hidden sm:block" />
+            <div className="absolute bottom-4 left-5 w-4 h-4 rotate-45 bg-white/10 hidden sm:block" />
+
             <div className="relative">
-              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-white/10 backdrop-blur-sm rounded-2xl mb-4 sm:mb-6">
-                <MessageCircle className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+              <div className="inline-flex items-center justify-center w-9 h-9 sm:w-12 sm:h-12 bg-white/20 rounded-xl sm:rounded-2xl border-2 border-white/30 mb-3 sm:mb-5">
+                <MessageCircle className="w-4 h-4 sm:w-6 sm:h-6" strokeWidth={2.5} />
               </div>
-              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4">
+              <h3 className="font-heading text-lg sm:text-2xl font-extrabold mb-2 sm:mb-3">
                 Still Have Questions?
               </h3>
-              <p className="text-sm sm:text-base lg:text-lg opacity-90 mb-6 sm:mb-8">
-                Our support team is here to help you 24/7. Get in touch with us through the app or reach out directly.
+              <p className="text-xs sm:text-sm opacity-90 mb-4 sm:mb-6">
+                Our support team is here to help you 24/7. Get in touch through
+                the app or reach out directly.
               </p>
-             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
-      {/* Call Support */}
-      <a href="tel:+233241940783" className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium hover:bg-white/20 transition-all">
-        <Phone className="w-4 h-4" />
-        <span>24/7 Support</span>
-      </a>
-
-      {/* WhatsApp Chat */}
-      <a
-        href="https://wa.me/+233241940783"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium hover:bg-white/20 transition-all"
-      >
-        <MessageCircle className="w-4 h-4" />
-        <span>Live Chat Available</span>
-      </a>
-    </div>
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center items-center">
+                <a
+                  href="tel:+233241940783"
+                  className="inline-flex items-center gap-1.5 sm:gap-2 bg-card text-primary px-4 py-2 rounded-full text-xs sm:text-sm font-bold border-2 border-foreground shadow-hard-sm transition-all duration-300 ease-bounce hover:-translate-y-0.5 hover:shadow-hard"
+                >
+                  <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={2.5} />
+                  <span>24/7 Support</span>
+                </a>
+                <a
+                  href="https://wa.me/+233241940783"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 sm:gap-2 bg-white/20 px-4 py-2 rounded-full text-xs sm:text-sm font-bold border-2 border-white/30 transition-all duration-300 ease-bounce hover:-translate-y-0.5 hover:bg-white/30"
+                >
+                  <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={2.5} />
+                  <span>Live Chat</span>
+                </a>
+              </div>
             </div>
           </div>
         </motion.div>

@@ -1,14 +1,20 @@
-import { JsonLd } from "@/components/JsonLd";
-import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
-import WhatsAppButton from "@/components/layout/WhatsAppButton";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://taskdey.com'),
@@ -17,10 +23,10 @@ export const metadata: Metadata = {
     template: "%s | Taskdey - Professional Services Marketplace"
   },
   icons: {
-  icon: '/favicon.ico',
-  shortcut: '/favicon.ico',
-  apple: '/apple-touch-icon.png',
-},
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
   description: "Find verified local workers in Ghana for all your service needs. Professional electricians, plumbers, tailors, mechanics, and more. Free to use, secure payments, and instant booking.",
   keywords: [
     "vocational services Ghana",
@@ -69,11 +75,11 @@ export const metadata: Metadata = {
     description: 'Find verified local workers in Ghana. Book skilled professionals for all your service needs. Free app, secure payments, instant booking.',
     images: [
       {
-        url: '/images/og-image.jpg',
+        url: '/images/twitter-image.png',
         width: 1200,
         height: 630,
-        alt: 'Taskdey App Preview',
-        type: 'image/jpeg',
+        alt: 'Taskdey - Professional Service Marketplace in Ghana',
+        type: 'image/png',
       },
     ],
   },
@@ -81,7 +87,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Taskdey - Find Local Service Professionals in Ghana',
     description: 'Connect with verified local workers in Ghana. Book skilled professionals instantly through our free app.',
-    images: ['/images/twitter-image.jpg'],
+    images: ['/images/twitter-image.png'],
     creator: '@taskdey',
     site: '@taskdey',
   },
@@ -103,26 +109,22 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/icon-192x192.png" />
+        <link rel="icon" href="/logo.png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
         <meta name="theme-color" content="#4F46E5" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Taskdey" />
       </head>
-      <body className={inter.className}>
+      <body className={`${plusJakarta.variable} ${outfit.variable} ${plusJakarta.className}`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <JsonLd />
-          <Header />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
-          <WhatsAppButton />
+          {children}
           <Toaster />
         </ThemeProvider>
       </body>

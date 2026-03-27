@@ -1,7 +1,13 @@
+import { authApiError, AuthApiErrorCode } from '@/lib/auth-api-errors';
+import { checkDbRateLimit, checkRateLimit, getClientIp } from '@/lib/rate-limit';
+import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { createClient } from '@supabase/supabase-js';
-import { authApiError, AuthApiErrorCode } from '@/lib/auth-api-errors';
+
+const WINDOW_MINUTES = 10;
+const WINDOW_MS = WINDOW_MINUTES * 60 * 1000;
+const MAX_CODES_PER_EMAIL = 3;
+const MAX_PER_IP = 10;
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const supabaseAdmin = createClient(
@@ -43,7 +49,7 @@ function buildVerificationEmailHtml(params: {
       <p style="margin:0;font-size:12px;color:#9ca3af;">Valid for ${expiryMinutes} minutes. Do not share this code.</p>
     </div>
     <div style="padding:12px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;">
-      <span style="font-size:11px;color:#9ca3af;">Taskdey – Streamline your tasks</span>
+      <span style="font-size:11px;color:#9ca3af;">Taskdey –  Get Jobs Done</span>
     </div>
   </div>
 </body>
@@ -81,6 +87,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const ip = getClientIp(req);
+    const ipCheck = checkRateLimit(`send-code:ip:${ip}`, MAX_PER_IP, WINDOW_MS);
+    if (!ipCheck.allowed) {
+      return authApiError(
+        AuthApiErrorCode.RATE_LIMITED,
+        `Too many requests. Try again in ${ipCheck.retryAfterSeconds}s.`,
+        429
+      );
+    }
+
     if (!process.env.RESEND_API_KEY) {
       return authApiError(
         AuthApiErrorCode.EMAIL_SERVICE_ERROR,
@@ -96,11 +112,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const emailLower = email.trim().toLowerCase();
+
+    const dbCheck = await checkDbRateLimit(supabaseAdmin, emailLower, MAX_CODES_PER_EMAIL, WINDOW_MINUTES);
+    if (!dbCheck.allowed) {
+      return authApiError(
+        AuthApiErrorCode.RATE_LIMITED,
+        `Too many codes sent to this email. Please wait ${WINDOW_MINUTES} minutes.`,
+        429
+      );
+    }
+
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = new Date(Date.now() + CODE_EXPIRY_MINUTES * 60 * 1000);
 
     const { error: insertError } = await supabaseAdmin.from('verification_codes').insert({
-      email: email.trim().toLowerCase(),
+      email: emailLower,
       code,
       type,
       expires_at: expiresAt.toISOString(),

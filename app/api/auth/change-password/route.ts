@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { authApiError, AuthApiErrorCode } from '@/lib/auth-api-errors';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+
+const WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+const MAX_PER_IP = 5;
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -32,6 +36,16 @@ export async function POST(req: NextRequest) {
         AuthApiErrorCode.SERVER_CONFIG_ERROR,
         'Server configuration error',
         500
+      );
+    }
+
+    const ip = getClientIp(req);
+    const ipCheck = checkRateLimit(`change-pw:ip:${ip}`, MAX_PER_IP, WINDOW_MS);
+    if (!ipCheck.allowed) {
+      return authApiError(
+        AuthApiErrorCode.RATE_LIMITED,
+        `Too many attempts. Try again in ${ipCheck.retryAfterSeconds}s.`,
+        429
       );
     }
 
